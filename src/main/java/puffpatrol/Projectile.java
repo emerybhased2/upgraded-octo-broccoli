@@ -83,6 +83,7 @@ final class Projectile {
                 w.slime(p, owner);
             } else {
                 w.damage(p, damage, dmgType, owner);
+                w.onHit(p, owner);
                 if (owner.hitSplash > 0) {
                     w.blast(p.x, p.y, owner.hitSplash, damage, Math.max(4, owner.maxHits), owner, DamageType.EXPLOSIVE, true);
                 }

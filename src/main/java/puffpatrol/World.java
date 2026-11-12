@@ -130,9 +130,10 @@ final class World {
     private void applyBuffs() {
         for (Tower t : towers) t.resetBuffs();
         for (Tower l : towers) {
-            if (l.type != TowerType.LANTERN) continue;
+            double aura = l.type == TowerType.LANTERN ? l.range : l.auraRange;
+            if (aura <= 0) continue;
             for (Tower t : towers) {
-                if (t == l || t.type == TowerType.LANTERN || Math.hypot(t.x - l.x, t.y - l.y) > l.range) continue;
+                if (t == l || t.type == TowerType.LANTERN || Math.hypot(t.x - l.x, t.y - l.y) > aura) continue;
                 t.rRange = Math.max(t.rRange, l.giveRange);
                 t.rSpeed = Math.min(t.rSpeed, l.giveSpeed);
                 t.rPierce = Math.max(t.rPierce, l.givePierce);
@@ -281,8 +282,20 @@ final class World {
         }
     }
 
+    /** Side effects of a direct hit: honey/spore slows and stuns. */
+    void onHit(Puff p, Tower t) {
+        if (p.dead) return;
+        boolean boss = p.type.isBoss();
+        if (t.slowOnHitTicks > 0 && (!boss || t.slowBosses)) {
+            p.slowFactor = p.slowTicks > 0 ? Math.min(p.slowFactor, t.slowOnHitFactor) : t.slowOnHitFactor;
+            p.slowTicks = Math.max(p.slowTicks, t.slowOnHitTicks);
+        }
+        if (t.stunOnHit > 0 && !boss) p.stun = Math.max(p.stun, t.stunOnHit);
+    }
+
     void slime(Puff p, Tower t) {
         applySlime(p, t, false);
+        onHit(p, t);
         if (t.slimeSplash > 0) {
             int n = 0;
             for (Puff q : puffs) {
@@ -308,6 +321,7 @@ final class World {
         if (p.dead) return;
         p.regrowTimer = 0;
         if (p.brittle && p.frozen > 0) dmg += 1;
+        if (src != null && src.bossBonus > 0 && p.type.isBoss()) dmg += src.bossBonus;
         while (dmg > 0 && !p.dead) {
             if (p.type.immuneTo(type)) {
                 if (rnd.nextInt(6) == 0 && particles.size() < 300) {

@@ -38,7 +38,7 @@ final class SaveGame {
         for (int i = 0; i < w.towers.size(); i++) {
             Tower t = w.towers.get(i);
             p.setProperty("tower." + i, String.join(",", t.type.name(), fmt(t.x), fmt(t.y),
-                    String.valueOf(t.tiers[0]), String.valueOf(t.tiers[1]), t.mode.name(),
+                    String.valueOf(t.tiers[0]), String.valueOf(t.tiers[1]), String.valueOf(t.tiers[2]), t.mode.name(),
                     String.valueOf(t.spent), String.valueOf(t.pops), String.valueOf(t.abilityCooldown)));
         }
         file().getParentFile().mkdirs();
@@ -92,12 +92,16 @@ final class SaveGame {
             for (int i = 0; p.containsKey("tower." + i); i++) {
                 String[] f = p.getProperty("tower." + i).split(",");
                 Tower t = new Tower(TowerType.valueOf(f[0]), Double.parseDouble(f[1]), Double.parseDouble(f[2]));
-                for (int k = 0; k < Integer.parseInt(f[3]); k++) t.applyUpgrade(0, 0);
-                for (int k = 0; k < Integer.parseInt(f[4]); k++) t.applyUpgrade(1, 0);
-                t.mode = Tower.Target.valueOf(f[5]);
-                t.spent = Integer.parseInt(f[6]);
-                t.pops = Integer.parseInt(f[7]);
-                t.abilityCooldown = Integer.parseInt(f[8]);
+                // Saves from the two-path version have 9 fields; three-path saves have 10.
+                int paths = f.length >= 10 ? 3 : 2;
+                for (int path = 0; path < paths; path++) {
+                    for (int k = 0; k < Integer.parseInt(f[3 + path]); k++) t.applyUpgrade(path, 0);
+                }
+                int o = 3 + paths;
+                t.mode = Tower.Target.valueOf(f[o]);
+                t.spent = Integer.parseInt(f[o + 1]);
+                t.pops = Integer.parseInt(f[o + 2]);
+                t.abilityCooldown = Integer.parseInt(f[o + 3]);
                 t.anim = 0;
                 w.towers.add(t);
             }

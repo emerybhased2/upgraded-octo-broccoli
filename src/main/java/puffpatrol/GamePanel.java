@@ -56,9 +56,14 @@ final class GamePanel extends JPanel {
 
     // play layout
     private final Rectangle[] shopRects = new Rectangle[TowerType.values().length];
-    private final Rectangle[] upgradeRects = {new Rectangle(PW + 12, 408, 216, 50), new Rectangle(PW + 12, 462, 216, 50)};
-    private final Rectangle targetRect = new Rectangle(PW + 12, 516, 106, 26);
-    private final Rectangle sellRect = new Rectangle(PW + 122, 516, 106, 26);
+    // upgrade menu (replaces the shop while a critter is selected)
+    private static final Color[] PATH_COLORS = {new Color(0xE0675A), new Color(0x4F8FD6), new Color(0x5EA84A)};
+    private static final Color[] PATH_TINTS = {new Color(0xFBE3DC), new Color(0xDDEBFA), new Color(0xE2F1D6)};
+    private final Rectangle[] pathRows = new Rectangle[3];
+    private final Rectangle[] cardRects = new Rectangle[3];
+    private final Rectangle targetRect = new Rectangle(PW + 16, 134, 208, 24);
+    private final Rectangle sellRect = new Rectangle(PW + 16, 502, 208, 30);
+    private final Rectangle closeRect = new Rectangle(PW + 202, 64, 22, 22);
     private final Rectangle startRect = new Rectangle(PW + 12, 576, 156, 52);
     private final Rectangle autoRect = new Rectangle(PW + 172, 576, 56, 52);
     private final Rectangle pauseBtn = new Rectangle(PW + 204, 8, 28, 28);
@@ -75,6 +80,10 @@ final class GamePanel extends JPanel {
         setBackground(Art.PARCHMENT);
         for (int i = 0; i < shopRects.length; i++) {
             shopRects[i] = new Rectangle(PW + 12 + (i % 3) * 74, 60 + (i / 3) * 64, 70, 60);
+        }
+        for (int p = 0; p < 3; p++) {
+            pathRows[p] = new Rectangle(PW + 16, 166 + p * 112, 208, 104);
+            cardRects[p] = new Rectangle(PW + 82, 166 + p * 112 + 6, 138, 92);
         }
         int dw = 150, dx0 = (W - (4 * dw + 3 * 12)) / 2;
         for (int i = 0; i < diffRects.length; i++) diffRects[i] = new Rectangle(dx0 + i * (dw + 12), 118, dw, 34);
@@ -244,18 +253,20 @@ final class GamePanel extends JPanel {
             selected = towerAt(x, y);
             return;
         }
-        for (int i = 0; i < shopRects.length; i++) {
-            if (shopRects[i].contains(x, y)) {
-                pickShop(i);
-                return;
-            }
-        }
         if (selected != null) {
-            for (int p = 0; p < 2; p++) if (upgradeRects[p].contains(x, y)) world.upgrade(selected, p);
+            for (int p = 0; p < 3; p++) if (cardRects[p].contains(x, y)) world.upgrade(selected, p);
             if (selected.type.aims() && targetRect.contains(x, y)) selected.mode = selected.mode.next();
             if (sellRect.contains(x, y)) {
                 world.sell(selected);
                 selected = null;
+            }
+            if (closeRect.contains(x, y)) selected = null;
+        } else {
+            for (int i = 0; i < shopRects.length; i++) {
+                if (shopRects[i].contains(x, y)) {
+                    pickShop(i);
+                    return;
+                }
             }
         }
         if (startRect.contains(x, y)) startOrSpeed();
@@ -346,8 +357,8 @@ final class GamePanel extends JPanel {
         }
         if (code == KeyEvent.VK_M) toggleSound();
         if (paused) return;
-        if (code >= KeyEvent.VK_1 && code <= KeyEvent.VK_9) pickShop(code - KeyEvent.VK_1);
-        if (code == KeyEvent.VK_0) pickShop(9);
+        if (selected == null && code >= KeyEvent.VK_1 && code <= KeyEvent.VK_9) pickShop(code - KeyEvent.VK_1);
+        if (selected == null && code == KeyEvent.VK_0) pickShop(9);
         List<Ability> abs = world.abilities();
         for (int i = 0; i < ABILITY_KEYS.length && i < abs.size(); i++) if (code == ABILITY_KEYS[i]) world.activate(abs.get(i));
         switch (code) {
@@ -358,8 +369,9 @@ final class GamePanel extends JPanel {
                 placing = null;
                 selected = null;
             }
-            case KeyEvent.VK_Z -> { if (selected != null) world.upgrade(selected, 0); }
-            case KeyEvent.VK_X -> { if (selected != null) world.upgrade(selected, 1); }
+            case KeyEvent.VK_Z, KeyEvent.VK_COMMA -> { if (selected != null) world.upgrade(selected, 0); }
+            case KeyEvent.VK_X, KeyEvent.VK_PERIOD -> { if (selected != null) world.upgrade(selected, 1); }
+            case KeyEvent.VK_C, KeyEvent.VK_SLASH -> { if (selected != null) world.upgrade(selected, 2); }
             case KeyEvent.VK_TAB -> { if (selected != null && selected.type.aims()) selected.mode = selected.mode.next(); }
             case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_DELETE -> {
                 if (selected != null) {
@@ -696,10 +708,27 @@ final class GamePanel extends JPanel {
             g.setStroke(new BasicStroke(2f));
             g.draw(new Ellipse2D.Double(t.x - 22, t.y + 8, 44, 16));
         }
-        for (int p = 0; p < 2; p++) {
-            for (int i = 0; i < t.tiers[p]; i++) {
-                double px = t.x + (p == 0 ? -8 - i * 7 : 8 + i * 7), py = t.y + 26;
-                Art.ink(g, new Ellipse2D.Double(px - 3, py - 3, 6, 6), p == 0 ? new Color(0xF0766A) : new Color(0x6AAEF0), 1f);
+        if (t.tiers[0] + t.tiers[1] + t.tiers[2] > 0) {
+            g.setFont(S_FONT);
+            String code = t.crosspath();
+            int w = g.getFontMetrics().stringWidth(code) + 8;
+            Shape tag = new RoundRectangle2D.Double(t.x - w / 2.0, t.y + 22, w, 13, 8, 8);
+            g.setColor(new Color(244, 235, 211, 220));
+            g.fill(tag);
+            g.setColor(Art.alpha(Art.INK, 160));
+            g.setStroke(new BasicStroke(0.8f));
+            g.draw(tag);
+            int cx = (int) (t.x - w / 2.0 + 4);
+            for (int p = 0; p < 3; p++) {
+                String part = String.valueOf(t.tiers[p]);
+                g.setColor(t.tiers[p] > 0 ? PATH_COLORS[p].darker() : MUTED);
+                g.drawString(part, cx, (int) t.y + 32);
+                cx += g.getFontMetrics().stringWidth(part);
+                if (p < 2) {
+                    g.setColor(MUTED);
+                    g.drawString("-", cx, (int) t.y + 32);
+                    cx += g.getFontMetrics().stringWidth("-");
+                }
             }
         }
     }
@@ -735,7 +764,9 @@ final class GamePanel extends JPanel {
         g.fillRect(pauseBtn.x + 16, pauseBtn.y + 8, 4, 12);
 
         TowerType[] types = TowerType.values();
-        for (int i = 0; i < types.length; i++) {
+        if (selected != null) {
+            drawUpgradeMenu(g, selected);
+        } else for (int i = 0; i < types.length; i++) {
             TowerType t = types[i];
             Rectangle r = shopRects[i];
             int cost = world.cost(t);
@@ -766,10 +797,9 @@ final class GamePanel extends JPanel {
             g.drawString(String.valueOf(cost), r.x + 24, r.y + 55);
         }
 
-        g.setColor(new Color(0xD8C8A4));
-        g.fillRect(PW + 12, 382, 216, 1);
-        if (selected != null) drawTowerPanel(g, selected);
-        else {
+        if (selected == null) {
+            g.setColor(new Color(0xD8C8A4));
+            g.fillRect(PW + 12, 382, 216, 1);
             TowerType info = hoverShop >= 0 ? types[hoverShop] : placing;
             if (info != null) {
                 g.setFont(H_FONT);
@@ -807,74 +837,158 @@ final class GamePanel extends JPanel {
         centered(g, world.autoStart ? "on" : "off", S_FONT, new Color(0x5A4632), autoRect.x + autoRect.width / 2, autoRect.y + 40);
     }
 
-    private void drawTowerPanel(Graphics2D g, Tower t) {
+    /** The upgrade menu: portrait, targeting, three upgrade paths and sell. Replaces the shop while open. */
+    private void drawUpgradeMenu(Graphics2D g, Tower t) {
+        Shape panel = new RoundRectangle2D.Double(PW + 8, 56, 224, 484, 16, 16);
+        g.setPaint(Art.vgrad(56, new Color(0xFBF5E6), 540, new Color(0xEFE3C4)));
+        g.fill(panel);
+        Art.ink(g, panel, null, 1.6f);
+
+        Shape port = new RoundRectangle2D.Double(PW + 16, 64, 62, 62, 14, 14);
+        g.setPaint(Art.radial(PW + 47, 92, 44, new Color(0xFFF8E2), new Color(0xD9C9A2)));
+        g.fill(port);
+        Art.ink(g, port, null, 1.4f);
+        g.drawImage(Art.tower(t.type), PW + 15, 60, 64, 64, null);
+
         g.setFont(H_FONT);
         g.setColor(Art.INK);
-        g.drawString(t.type.label, PW + 14, 400);
-        for (int p = 0; p < 2; p++) {
-            Rectangle r = upgradeRects[p];
-            Upgrade u = t.nextUpgrade(p);
-            World.UpgradeState st = world.upgradeState(t, p);
-            int cost = u == null ? 0 : world.cost(u);
-            boolean afford = st == World.UpgradeState.AVAILABLE && world.canAfford(cost);
-            Shape box = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height, 12, 12);
-            Color tint = p == 0 ? new Color(0xFBE3DC) : new Color(0xDDEBFA);
-            g.setColor(st != World.UpgradeState.AVAILABLE ? new Color(0xE6DCC4) : r.contains(mx, my) && afford ? tint.brighter() : tint);
-            g.fill(box);
-            g.setColor(afford ? (p == 0 ? new Color(0xC0453B) : new Color(0x3E6EB0)) : WOOD);
-            g.setStroke(new BasicStroke(afford ? 2f : 1.2f));
-            g.draw(box);
-            for (int i = 0; i < 4; i++) {
-                Ellipse2D pip = new Ellipse2D.Double(r.x + r.width - 50 + i * 11, r.y + 6, 8, 8);
-                Art.ink(g, pip, i < t.tiers[p] ? (p == 0 ? new Color(0xF0766A) : new Color(0x6AAEF0)) : new Color(0xF7F1E2), 1f);
-            }
-            g.setFont(B_FONT);
-            g.setColor(Art.INK);
-            switch (st) {
-                case MAXED -> g.drawString("Path complete", r.x + 10, r.y + 17);
-                case PATH_LOCKED -> {
-                    g.drawString(u.name(), r.x + 10, r.y + 17);
-                    g.setFont(S_FONT);
-                    g.setColor(MUTED);
-                    g.drawString("Locked: the other path went past tier 2.", r.x + 10, r.y + 34);
-                }
-                case XP_LOCKED -> {
-                    g.drawString(u.name(), r.x + 10, r.y + 17);
-                    g.setFont(S_FONT);
-                    g.setColor(MUTED);
-                    g.drawString("Needs " + profile.xpShort(t.type, p, t.tiers[p] + 1) + " more xp to unlock.", r.x + 10, r.y + 34);
-                }
-                case AVAILABLE -> {
-                    g.drawString(u.name() + (u.ability() != null ? " ★" : ""), r.x + 10, r.y + 17);
-                    g.setFont(S_FONT);
-                    g.setColor(new Color(0x5A4632));
-                    wrap(g, u.desc(), r.x + 10, r.y + 31, 150, 12);
-                    Art.drawCoin(g, r.x + r.width - 52, r.y + r.height - 11, 5);
-                    g.setFont(B_FONT);
-                    g.setColor(afford ? Art.INK : BAD);
-                    g.drawString(String.valueOf(cost), r.x + r.width - 44, r.y + r.height - 7);
-                }
-            }
-        }
-        boolean aims = t.type.aims();
-        Shape tb = new RoundRectangle2D.Double(targetRect.x, targetRect.y, targetRect.width, targetRect.height, 10, 10);
-        g.setColor(aims ? new Color(0xF3E8CC) : new Color(0xE6DCC4));
-        g.fill(tb);
-        Art.ink(g, tb, null, 1.2f);
-        centered(g, aims ? "Target: " + t.mode.label : "No aiming", B_FONT, aims ? Art.INK : new Color(0x9A8668),
-                targetRect.x + targetRect.width / 2, targetRect.y + 17);
-        Shape sb = new RoundRectangle2D.Double(sellRect.x, sellRect.y, sellRect.width, sellRect.height, 10, 10);
-        g.setColor(sellRect.contains(mx, my) ? new Color(0xF6D2C8) : new Color(0xF3E8CC));
-        g.fill(sb);
-        Art.ink(g, sb, null, 1.2f);
-        centered(g, "Sell  " + t.sellValue(), B_FONT, Art.INK, sellRect.x + sellRect.width / 2, sellRect.y + 17);
-        String sub = t.type.attack == TowerType.Attack.FARM ? "+" + t.income + " coins/round"
-                : t.type.attack == TowerType.Attack.SUPPORT && !t.sparks ? "support" : t.pops + " pops";
-        if (t.seesHidden()) sub += " \u00b7 sees hidden";
-        sub += " \u00b7 xp " + profile.xp(t.type);
+        String[] nameParts = t.type.label.split(" ", 2);
+        g.drawString(nameParts[0], PW + 86, 80);
+        if (nameParts.length > 1) g.drawString(nameParts[1], PW + 86, 97);
+        g.setFont(STAT_FONT);
+        g.setColor(Art.INK);
+        g.drawString(t.crosspath(), PW + 86, 120);
         g.setFont(S_FONT);
         g.setColor(MUTED);
-        g.drawString(sub, PW + 14, 562);
+        String sub = t.income > 0 && t.type.attack == TowerType.Attack.FARM ? "+" + t.income + "/rnd" : t.pops + " pops";
+        if (t.income > 0 && t.type.attack != TowerType.Attack.FARM) sub += " \u00b7 +" + t.income;
+        g.drawString(sub, PW + 224 - g.getFontMetrics().stringWidth(sub), 120);
+
+        Shape cb = new RoundRectangle2D.Double(closeRect.x, closeRect.y, closeRect.width, closeRect.height, 8, 8);
+        g.setColor(closeRect.contains(mx, my) ? new Color(0xF6D2C8) : new Color(0xEFE3C4));
+        g.fill(cb);
+        Art.ink(g, cb, null, 1.2f);
+        Art.line(g, Art.INK, 1.8f, closeRect.x + 7, closeRect.y + 7, closeRect.x + 15, closeRect.y + 15);
+        Art.line(g, Art.INK, 1.8f, closeRect.x + 15, closeRect.y + 7, closeRect.x + 7, closeRect.y + 15);
+
+        boolean aims = t.type.aims();
+        Shape tb = new RoundRectangle2D.Double(targetRect.x, targetRect.y, targetRect.width, targetRect.height, 10, 10);
+        g.setColor(!aims ? new Color(0xE6DCC4) : targetRect.contains(mx, my) ? new Color(0xFBF6E8) : new Color(0xF3E8CC));
+        g.fill(tb);
+        Art.ink(g, tb, null, 1.2f);
+        String tl = aims ? "\u25C0   Target: " + t.mode.label + "   \u25B6" : (t.seesHidden() ? "Sees hidden puffs" : "No aiming");
+        if (aims && t.seesHidden()) tl = "\u25C0  " + t.mode.label + " \u00b7 sees hidden  \u25B6";
+        centered(g, tl, B_FONT, aims ? Art.INK : new Color(0x7A6650), targetRect.x + targetRect.width / 2, targetRect.y + 16);
+
+        for (int p = 0; p < 3; p++) drawPathRow(g, t, p);
+
+        Shape sb = new RoundRectangle2D.Double(sellRect.x, sellRect.y, sellRect.width, sellRect.height, 12, 12);
+        g.setColor(sellRect.contains(mx, my) ? new Color(0xF6D2C8) : new Color(0xF3E8CC));
+        g.fill(sb);
+        Art.ink(g, sb, null, 1.4f);
+        Art.drawCoin(g, sellRect.x + 74, sellRect.y + 15, 6);
+        g.setFont(H_FONT);
+        g.setColor(Art.INK);
+        g.drawString("Sell  " + t.sellValue(), sellRect.x + 84, sellRect.y + 21);
+        g.setFont(S_FONT);
+        g.setColor(MUTED);
+        g.drawString("Z X C buy \u00b7 Tab target \u00b7 Del sell \u00b7 Esc", PW + 16, 556);
+    }
+
+    private void drawPathRow(Graphics2D g, Tower t, int p) {
+        Rectangle row = pathRows[p];
+        Shape rs = new RoundRectangle2D.Double(row.x, row.y, row.width, row.height, 14, 14);
+        g.setColor(PATH_TINTS[p]);
+        g.fill(rs);
+        g.setColor(Art.alpha(PATH_COLORS[p], 160));
+        g.setStroke(new BasicStroke(1.4f));
+        g.draw(rs);
+
+        // left column: path number, what is owned, tier pips
+        g.setFont(B_FONT);
+        g.setColor(PATH_COLORS[p].darker());
+        g.drawString("Path " + (p + 1), row.x + 8, row.y + 17);
+        g.setFont(S_FONT);
+        g.setColor(Art.INK);
+        if (t.tiers[p] > 0) {
+            wrap(g, t.type.paths[p][t.tiers[p] - 1].name(), row.x + 8, row.y + 34, 58, 12, 3);
+        } else {
+            g.setColor(MUTED);
+            g.drawString("\u2014", row.x + 8, row.y + 34);
+        }
+        for (int i = 0; i < 5; i++) {
+            Shape pip = new RoundRectangle2D.Double(row.x + 7 + i * 12, row.y + row.height - 16, 10, 9, 4, 4);
+            Art.ink(g, pip, i < t.tiers[p] ? PATH_COLORS[p] : new Color(0xFBF7EC), 0.9f);
+        }
+
+        // right: the next upgrade card
+        Rectangle c = cardRects[p];
+        Upgrade u = t.nextUpgrade(p);
+        World.UpgradeState st = world.upgradeState(t, p);
+        int cost = u == null ? 0 : world.cost(u);
+        boolean afford = st == World.UpgradeState.AVAILABLE && world.canAfford(cost);
+        Shape card = new RoundRectangle2D.Double(c.x, c.y, c.width, c.height, 12, 12);
+        Color face = switch (st) {
+            case AVAILABLE -> afford ? (c.contains(mx, my) ? new Color(0xFFFDF4) : new Color(0xFBF7EC)) : new Color(0xF1E9D6);
+            default -> new Color(0xE4DBC6);
+        };
+        g.setColor(face);
+        g.fill(card);
+        g.setColor(afford ? PATH_COLORS[p] : WOOD);
+        g.setStroke(new BasicStroke(afford ? 2.2f : 1.1f));
+        g.draw(card);
+        switch (st) {
+            case MAXED -> {
+                centered(g, "Path complete", B_FONT, PATH_COLORS[p].darker(), c.x + c.width / 2, c.y + 44);
+                centered(g, "\u2605 \u2605 \u2605 \u2605 \u2605", S_FONT, PATH_COLORS[p], c.x + c.width / 2, c.y + 60);
+            }
+            case PATH_LOCKED -> {
+                drawLock(g, c.x + c.width / 2.0, c.y + 30);
+                centered(g, "Path closed", B_FONT, MUTED, c.x + c.width / 2, c.y + 62);
+                g.setFont(S_FONT);
+                g.setColor(MUTED);
+                String why = t.tiers[p] == 0 ? "Two paths in use" : "Other path past tier 2";
+                centered(g, why, S_FONT, MUTED, c.x + c.width / 2, c.y + 78);
+            }
+            case XP_LOCKED -> {
+                g.setFont(B_FONT);
+                g.setColor(MUTED);
+                int ny = wrap(g, u.name(), c.x + 8, c.y + 17, c.width - 16, 13, 2);
+                drawLock(g, c.x + c.width / 2.0, ny + 14);
+                centered(g, "Needs " + profile.xpShort(t.type, p, t.tiers[p] + 1) + " more xp", S_FONT, MUTED,
+                        c.x + c.width / 2, c.y + c.height - 10);
+            }
+            case AVAILABLE -> {
+                g.setFont(B_FONT);
+                g.setColor(Art.INK);
+                int ny = wrap(g, u.name() + (u.ability() != null ? " \u2605" : ""), c.x + 8, c.y + 16, c.width - 16, 13, 2);
+                g.setFont(S_FONT);
+                g.setColor(new Color(0x5A4632));
+                wrap(g, u.desc(), c.x + 8, ny + 13, c.width - 14, 12, ny > c.y + 20 ? 3 : 4);
+                Shape price = new RoundRectangle2D.Double(c.x + c.width - 64, c.y + c.height - 21, 58, 16, 8, 8);
+                g.setColor(afford ? new Color(0xFFF1B8) : new Color(0xF2D6CF));
+                g.fill(price);
+                Art.drawCoin(g, c.x + c.width - 54, c.y + c.height - 13, 4.5);
+                g.setFont(B_FONT);
+                g.setColor(afford ? Art.INK : BAD);
+                g.drawString(String.valueOf(cost), c.x + c.width - 46, c.y + c.height - 9);
+                g.setFont(S_FONT);
+                g.setColor(new Color(0x9A8668));
+                g.drawString("ZXC".charAt(p) + "", c.x + 8, c.y + c.height - 8);
+            }
+        }
+    }
+
+    private void drawLock(Graphics2D g, double cx, double cy) {
+        g.setColor(MUTED);
+        g.setStroke(new BasicStroke(2f));
+        g.draw(new Arc2D.Double(cx - 6, cy - 12, 12, 14, 0, 180, Arc2D.OPEN));
+        g.draw(new java.awt.geom.Line2D.Double(cx - 6, cy - 5, cx - 6, cy - 1));
+        g.draw(new java.awt.geom.Line2D.Double(cx + 6, cy - 5, cx + 6, cy - 1));
+        Shape body = new RoundRectangle2D.Double(cx - 9, cy - 2, 18, 13, 4, 4);
+        Art.ink(g, body, new Color(0xC9B98A), 1.2f);
+        g.setColor(Art.INK);
+        g.fill(new Ellipse2D.Double(cx - 1.5, cy + 2, 3, 4));
     }
 
     private void drawOverlays(Graphics2D g) {
@@ -923,18 +1037,32 @@ final class GamePanel extends JPanel {
     }
 
     private static void wrap(Graphics2D g, String text, int x, int y, int width, int lh) {
+        wrap(g, text, x, y, width, lh, 99);
+    }
+
+    /** Draws word-wrapped text (adding an ellipsis past maxLines) and returns the baseline of the last line. */
+    private static int wrap(Graphics2D g, String text, int x, int y, int width, int lh, int maxLines) {
         FontMetrics fm = g.getFontMetrics();
+        List<String> lines = new ArrayList<>();
         StringBuilder line = new StringBuilder();
         for (String w : text.split(" ")) {
             String trial = line.isEmpty() ? w : line + " " + w;
             if (fm.stringWidth(trial) > width && !line.isEmpty()) {
-                g.drawString(line.toString(), x, y);
-                y += lh;
+                lines.add(line.toString());
                 line = new StringBuilder(w);
             } else {
                 line = new StringBuilder(trial);
             }
         }
-        if (!line.isEmpty()) g.drawString(line.toString(), x, y);
+        if (!line.isEmpty()) lines.add(line.toString());
+        if (lines.size() > maxLines) {
+            List<String> cut = new ArrayList<>(lines.subList(0, maxLines));
+            String last = cut.get(maxLines - 1);
+            while (!last.isEmpty() && fm.stringWidth(last + "\u2026") > width) last = last.substring(0, last.length() - 1);
+            cut.set(maxLines - 1, last.stripTrailing() + "\u2026");
+            lines = cut;
+        }
+        for (int i = 0; i < lines.size(); i++) g.drawString(lines.get(i), x, y + i * lh);
+        return y + (lines.size() - 1) * lh;
     }
 }

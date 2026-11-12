@@ -33,14 +33,15 @@ earn that difficulty's medal on that map, then carry on in freeplay.
 | Key | Action |
 | --- | --- |
 | Space | Start the next round / change speed (1x, 2x, 3x) |
-| 1–9, 0 | Pick one of the first ten critters from the shop |
+| 1–9, 0 | Pick one of the first ten critters from the shop (when no critter is selected) |
 | Click / Shift-click | Place one / place several |
-| Z / X | Buy the next upgrade on path A / path B |
+| Z / X / C (or , . /) | Buy the next upgrade on path 1 / 2 / 3 of the selected critter |
 | Q W E R T Y U | Use an activated ability (also clickable in the bar at bottom-left) |
 | Tab | Cycle targeting (First, Last, Strong, Close) |
 | Delete | Sell the selected critter (70% refund) |
 | A | Toggle auto-start of rounds |
-| P or Esc | Pause menu (speed, sound, unlocks, restart, save and quit) |
+| Esc | Close the upgrade menu / cancel placing |
+| P | Pause menu (speed, sound, unlocks, restart, save and quit) |
 | M | Mute |
 
 ### Difficulties
@@ -54,10 +55,23 @@ earn that difficulty's medal on that map, then carry on in freeplay.
 
 ### Upgrades and abilities
 
-Every critter has two upgrade paths of four tiers. Only one path can go past tier 2. Upgrades are
-unlocked with **critter xp**, which each kind of critter earns at the end of every round you play
-with it, so later upgrades open up as you keep using a critter. To skip this, switch
-**Upgrades: all unlocked** on the title page or in the pause menu.
+Click a critter to open its **upgrade menu**, which replaces the shop while it is open. The top shows
+the critter, its crosspath code (such as `3-0-2`) and a targeting button. Below that are **three
+upgrade paths of five tiers**, each showing what you own, a row of tier pips and a card for the next
+upgrade. Click a card (or press Z / X / C) to buy it.
+
+Crosspathing rules: a critter can upgrade **at most two paths**, and only **one** of them past tier
+2, so the strongest setups look like `5-2-0`. Closed paths show a padlock. The code is also shown
+under each critter on the map.
+
+Upgrades are unlocked with **critter xp**, which each kind of critter earns at the end of every
+round you play with it:
+
+| Tier | 1 | 2 | 3 | 4 | 5 |
+| --- | --- | --- | --- | --- | --- |
+| Xp needed | 0 | 60 | 300 | 1200 | 3500 |
+
+To skip this, switch **Upgrades: all unlocked** on the title page or in the pause menu.
 
 Upgrades marked ★ grant an **activated ability**, such as Deep Winter (freeze the whole map), Tidal
 Wave or Pinecone Barrage. Abilities appear in the bar at the bottom-left of the map and recharge

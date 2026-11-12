@@ -17,8 +17,8 @@ import java.util.Set;
  * difficulty, and settings. Stored in ~/.puffpatrol/profile.properties.
  */
 final class Profile {
-    /** Experience needed to unlock each slot, in order A1, B1, A2, B2, A3, B3, A4, B4. */
-    static final int[] XP_NEEDED = {0, 0, 60, 140, 300, 500, 1200, 2000};
+    /** Experience a critter needs before each tier (1 to 5) unlocks, on every path. */
+    static final int[] XP_NEEDED = {0, 60, 300, 1200, 3500};
 
     private final Map<TowerType, Integer> xp = new EnumMap<>(TowerType.class);
     private final Set<String> medals = new HashSet<>();
@@ -96,17 +96,13 @@ final class Profile {
         xp.merge(t, amount, Integer::sum);
     }
 
-    private static int slot(int path, int tier) {
-        return (tier - 1) * 2 + path;
-    }
-
     boolean unlocked(TowerType t, int path, int tier) {
-        return allUnlocked || xp(t) >= XP_NEEDED[slot(path, tier)];
+        return allUnlocked || xp(t) >= XP_NEEDED[tier - 1];
     }
 
     /** Experience still needed for an upgrade (0 if unlocked). */
     int xpShort(TowerType t, int path, int tier) {
-        return allUnlocked ? 0 : Math.max(0, XP_NEEDED[slot(path, tier)] - xp(t));
+        return allUnlocked ? 0 : Math.max(0, XP_NEEDED[tier - 1] - xp(t));
     }
 
     boolean hasMedal(String map, Difficulty d) {

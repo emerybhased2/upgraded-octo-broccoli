@@ -27,7 +27,7 @@ final class Tower {
     /** Where it currently is: differs from x/y only for flyers. */
     double px, py;
     double orbitAngle;
-    final int[] tiers = new int[2];
+    final int[] tiers = new int[3];
     int spent;
     Target mode = Target.FIRST;
 
@@ -36,11 +36,19 @@ final class Tower {
     double slimeFactor = 1, slimeSplashR;
     int damage, pierce, shots = 1, maxHits, freezeTicks, pulseDamage, income;
     int slimeTicks, slimeDot, slimeDotEvery = 60, slimeSplash, burrLife, stun, coinBonus;
+    /** Extra damage dealt to big clouds (Nimbus, Stormhead). */
+    int bossBonus;
+    /** Hits slow the puff (and stun it, if set). */
+    int slowOnHitTicks, stunOnHit;
+    double slowOnHitFactor = 1;
+    boolean slowBosses;
+    int eggDamage = 3;
     DamageType dmgType = DamageType.NORMAL;
     boolean cluster, brittle, permafrost, fire, detects, slimeBosses, burrBombs, laser, eggs, whirlpool, bossStun, heavySlow;
     boolean sparks, reveal;
 
-    // ---- what a lantern gives to critters in its glow
+    // ---- what a lantern (or another aura critter) gives to critters within auraRange
+    double auraRange;
     double giveRange = 1, giveSpeed = 1;
     int givePierce, giveDamage;
     boolean giveDetect;
@@ -111,9 +119,24 @@ final class Tower {
         return tiers[path] < ups.length ? ups[tiers[path]] : null;
     }
 
-    /** Only one path may go past tier 2. */
+    /**
+     * Crosspathing: at most two paths may be upgraded at all, and only one of them past tier 2
+     * (so the best you can do is 5-2-0).
+     */
     boolean pathLocked(int path) {
-        return tiers[path] + 1 > 2 && tiers[1 - path] > 2;
+        int next = tiers[path] + 1;
+        int othersUsed = 0;
+        for (int p = 0; p < tiers.length; p++) {
+            if (p == path) continue;
+            if (tiers[p] > 0) othersUsed++;
+            if (next > 2 && tiers[p] > 2) return true;
+        }
+        return tiers[path] == 0 && othersUsed >= 2;
+    }
+
+    /** Crosspath code such as "3-0-2". */
+    String crosspath() {
+        return tiers[0] + "-" + tiers[1] + "-" + tiers[2];
     }
 
     void applyUpgrade(int path, int paid) {
@@ -160,7 +183,7 @@ final class Tower {
             case FLYER -> volley(w);
             case BURROW -> burrow(w);
             case SUPPORT -> sparks && spark(w);
-            case FARM -> false;
+            case FARM -> sparks && spark(w);
         };
         if (fired) {
             timer = (int) Math.max(2, Math.round(effCooldown(w)));
@@ -199,6 +222,7 @@ final class Tower {
         w.particles.add(Particle.streak(x, y - 14, t.x, t.y, new Color(255, 246, 200)));
         w.particles.add(Particle.ring(t.x, t.y, t.radius() + 6, new Color(0xFFF3B0)));
         w.damage(t, effDamage(), dmgType, this);
+        if (hitSplash > 0) w.blast(t.x, t.y, hitSplash, effDamage(), Math.max(4, maxHits), this, DamageType.EXPLOSIVE, true);
         w.sfx(Sound.Sfx.ZAP);
         return true;
     }
@@ -247,10 +271,12 @@ final class Tower {
             }
         }
         if (burrSpots.isEmpty()) return false;
-        double[] s = burrSpots.get(w.rnd.nextInt(burrSpots.size()));
-        double jx = s[0] + (w.rnd.nextDouble() - 0.5) * w.map.pathWidth * 0.6;
-        double jy = s[1] + (w.rnd.nextDouble() - 0.5) * w.map.pathWidth * 0.6;
-        w.projectiles.add(Projectile.burr(this, x, y - 8, jx, jy));
+        for (int i = 0; i < Math.max(1, shots); i++) {
+            double[] s = burrSpots.get(w.rnd.nextInt(burrSpots.size()));
+            double jx = s[0] + (w.rnd.nextDouble() - 0.5) * w.map.pathWidth * 0.6;
+            double jy = s[1] + (w.rnd.nextDouble() - 0.5) * w.map.pathWidth * 0.6;
+            w.projectiles.add(Projectile.burr(this, x, y - 8, jx, jy));
+        }
         return true;
     }
 
@@ -278,7 +304,7 @@ final class Tower {
         for (Puff p : w.puffs) {
             if (!p.dead && Math.hypot(p.x - px, p.y - py) < 70) {
                 eggTimer = 0;
-                w.blast(p.x, p.y, 55, 3 + rDamage, 20, this, DamageType.EXPLOSIVE, true);
+                w.blast(p.x, p.y, 55, eggDamage + rDamage, 20, this, DamageType.EXPLOSIVE, true);
                 return;
             }
         }
@@ -313,8 +339,10 @@ final class Tower {
             }
         }
         if (best == null) return false;
-        w.particles.add(Particle.streak(x, y - 24, best.x, best.y, new Color(0xFFE066)));
-        w.damage(best, damage, dmgType, this);
+        w.particles.add(Particle.streak(x, y - 24, best.x, best.y,
+                type == TowerType.MUSHROOM ? new Color(0xE8D9A6) : new Color(0xFFE066)));
+        w.damage(best, damage + rDamage, dmgType, this);
+        w.onHit(best, this);
         return true;
     }
 
