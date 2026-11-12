@@ -94,3 +94,19 @@ backgrounds and a contact sheet.
 | `GameMap.java`, `Maps.java` | Paths, scenery and where you can build |
 | `Waves.java` | The 40 hand-written rounds plus the freeplay generator |
 | `Art.java`, `ArtExporter.java` | Procedural art and PNG export |
+
+## Bloons reference data script
+
+[`scripts/fetch_bloons_data.rb`](scripts/fetch_bloons_data.rb) pulls reference names from the
+[Bloons Wiki](https://bloons.fandom.com) API: BTD5 towers and their upgrade paths, BTD5 maps (with
+difficulty), BTD6 difficulties and modes, BTD6 Bloons and BTD6 Boss Bloons. It uses only the Ruby
+standard library.
+
+```bash
+ruby scripts/fetch_bloons_data.rb                          # readable summary
+ruby scripts/fetch_bloons_data.rb --json data/bloons_data.json
+ruby scripts/fetch_bloons_data.rb --json - | jq .btd6.bosses
+```
+
+A snapshot of its output is in [`data/bloons_data.json`](data/bloons_data.json). The wiki's content
+is licensed CC BY-SA.

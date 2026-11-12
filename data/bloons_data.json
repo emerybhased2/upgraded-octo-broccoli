@@ -1,0 +1,799 @@
+{
+  "source": "https://bloons.fandom.com (CC BY-SA)",
+  "fetched_at": "2026-11-12T18:06:22Z",
+  "btd5": {
+    "towers": [
+      {
+        "name": "Dart Monkey",
+        "page": "Dart Monkey (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Long Range Darts",
+            "Enhanced Eyesight",
+            "Spike-O-Pult",
+            "Juggernaut"
+          ],
+          "path_2": [
+            "Sharp Shots",
+            "Razor Sharp Shots",
+            "Triple Darts",
+            "Super Monkey Fan Club"
+          ]
+        }
+      },
+      {
+        "name": "Tack Shooter",
+        "page": "Tack Shooter (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Faster Shooting",
+            "Even Faster Shooting",
+            "Tack Sprayer",
+            "Ring of Fire"
+          ],
+          "path_2": [
+            "Extra Range Tacks",
+            "Super Range Tacks",
+            "Blade Shooter",
+            "Blade Maelstrom"
+          ]
+        }
+      },
+      {
+        "name": "Bomb Tower",
+        "page": "Bomb Tower (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Extra Range",
+            "Frag Bombs",
+            "Cluster Bombs",
+            "Bloon Impact"
+          ],
+          "path_2": [
+            "Bigger Bombs",
+            "Missile Launcher",
+            "MOAB Mauler",
+            "MOAB Assassin"
+          ]
+        }
+      },
+      {
+        "name": "Ice Tower",
+        "page": "Ice Tower (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Enhanced Freeze",
+            "Snap Freeze",
+            "Arctic Wind",
+            "Viral Frost"
+          ],
+          "path_2": [
+            "Permafrost",
+            "Deep Freeze",
+            "Ice Shards",
+            "Absolute Zero"
+          ]
+        }
+      },
+      {
+        "name": "Super Monkey",
+        "page": "Super Monkey (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Laser Blasts",
+            "Plasma Blasts",
+            "Sun God",
+            "Temple of the Monkey God"
+          ],
+          "path_2": [
+            "Super Range",
+            "Epic Range",
+            "Robo Monkey",
+            "Technological Terror"
+          ]
+        }
+      },
+      {
+        "name": "Boomerang Thrower",
+        "page": "Boomerang Thrower (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Multi-Target",
+            "Glaive Thrower",
+            "Glaive Ricochet",
+            "Glaive Lord"
+          ],
+          "path_2": [
+            "Sonic Boom",
+            "Red Hot 'Rangs",
+            "Bionic Boomer",
+            "Turbo Charge"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Village",
+        "page": "Monkey Village (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Monkey Beacon",
+            "Jungle Drums",
+            "Monkey Town",
+            "High Energy Beacon"
+          ],
+          "path_2": [
+            "Monkey Fort",
+            "Radar Scanner",
+            "Monkey Intelligence Bureau",
+            "M.I.B. Call to Arms"
+          ]
+        }
+      },
+      {
+        "name": "Mortar Tower",
+        "page": "Mortar Tower",
+        "upgrades": {
+          "path_1": [
+            "Increased Accuracy",
+            "Bigger Blast",
+            "Bloon Buster",
+            "The Big One"
+          ],
+          "path_2": [
+            "Rapid Reload",
+            "Burny Stuff",
+            "Signal Flare",
+            "Artillery Battery"
+          ]
+        }
+      },
+      {
+        "name": "Glue Gunner",
+        "page": "Glue Gunner (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Glue Soak",
+            "Corrosive Glue",
+            "Bloon Dissolver",
+            "Bloon Liquefier"
+          ],
+          "path_2": [
+            "Stickier Glue",
+            "Glue Splatter",
+            "Glue Hose",
+            "Glue Striker"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Ace",
+        "page": "Monkey Ace (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Rapid Fire",
+            "Sharper Darts",
+            "Neva-Miss Targeting",
+            "Spectre"
+          ],
+          "path_2": [
+            "Pineapple Present",
+            "Spy Plane",
+            "Operation: Dart Storm",
+            "Ground Zero"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Buccaneer",
+        "page": "Monkey Buccaneer (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Faster Shooting",
+            "Longer Cannons",
+            "Destroyer",
+            "Aircraft Carrier"
+          ],
+          "path_2": [
+            "Grape Shot",
+            "Crow's Nest",
+            "Cannon Ship",
+            "Monkey Pirates"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Apprentice",
+        "page": "Monkey Apprentice (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Intense Magic",
+            "Lightning Bolt",
+            "Summon Whirlwind",
+            "Tempest Tornado"
+          ],
+          "path_2": [
+            "Fireball",
+            "Monkey Sense",
+            "Dragon's Breath",
+            "Summon Phoenix"
+          ]
+        }
+      },
+      {
+        "name": "Banana Farm",
+        "page": "Banana Farm (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "More Bananas",
+            "Banana Plantation",
+            "Banana Republic",
+            "Banana Research Facility"
+          ],
+          "path_2": [
+            "Long Life Bananas",
+            "Valuable Bananas",
+            "Monkey Bank",
+            "Banana Investments Advisory"
+          ]
+        }
+      },
+      {
+        "name": "Dartling Gun",
+        "page": "Dartling Gun (BTD4-BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Focused Firing",
+            "Faster Barrel Spin",
+            "Laser Cannon",
+            "Ray of Doom"
+          ],
+          "path_2": [
+            "Powerful Darts",
+            "Depleted Bloontonium Darts",
+            "Hydra Rocket Pods",
+            "Bloon Area Denial System"
+          ]
+        }
+      },
+      {
+        "name": "Spike Factory",
+        "page": "Spike Factory (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Bigger Stacks",
+            "White Hot Spikes",
+            "Spiked Ball Factory",
+            "Spiked Mines"
+          ],
+          "path_2": [
+            "Faster Production",
+            "Even Faster Production",
+            "MOAB-SHREDR Spikes",
+            "Spike Storm"
+          ]
+        }
+      },
+      {
+        "name": "Sniper Monkey",
+        "page": "Sniper Monkey (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Full Metal Jacket",
+            "Point Five Oh",
+            "Deadly Precision",
+            "Cripple MOAB"
+          ],
+          "path_2": [
+            "Faster Firing",
+            "Night Vision Goggles",
+            "Semi-Automatic Rifle",
+            "Supply Drop"
+          ]
+        }
+      },
+      {
+        "name": "Ninja Monkey",
+        "page": "Ninja Monkey (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Ninja Discipline",
+            "Sharp Shurikens",
+            "Double Shot",
+            "Bloonjitsu"
+          ],
+          "path_2": [
+            "Seeking Shuriken",
+            "Distraction",
+            "Flash Bomb",
+            "Sabotage Supply Lines"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Engineer",
+        "page": "Monkey Engineer",
+        "upgrades": {
+          "path_1": [
+            "Sentry Gun",
+            "Fast Engineering",
+            "Cleansing Foam",
+            "Bloon Trap"
+          ],
+          "path_2": [
+            "9-Inch Nails",
+            "Larger Service Area",
+            "Sprockets",
+            "Overclock"
+          ]
+        }
+      },
+      {
+        "name": "Bloonchipper",
+        "page": "Bloonchipper",
+        "upgrades": {
+          "path_1": [
+            "Suckier",
+            "Heavy Duty Suction",
+            "Dual Layer Blades",
+            "Super Wide Funnel"
+          ],
+          "path_2": [
+            "Long Range Suck",
+            "Faster Shred",
+            "Triple Barrel",
+            "Supa-Vac"
+          ]
+        }
+      },
+      {
+        "name": "Monkey Sub",
+        "page": "Monkey Sub (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Barbed Darts",
+            "Advanced Intel",
+            "Submerge and Support",
+            "Bloontonium Reactor"
+          ],
+          "path_2": [
+            "Twin Guns",
+            "Airburst Darts",
+            "Ballistic Missile",
+            "First Strike Capability"
+          ]
+        }
+      },
+      {
+        "name": "Heli Pilot",
+        "page": "Heli Pilot (BTD5)",
+        "upgrades": {
+          "path_1": [
+            "Quad Darts",
+            "Pursuit",
+            "Razor Rotors",
+            "Apache Dartship"
+          ],
+          "path_2": [
+            "Bigger Jets",
+            "Enhanced IFR Instruments",
+            "Downdraft",
+            "Support Chinook"
+          ]
+        }
+      }
+    ],
+    "maps": [
+      {
+        "name": "Monkey Lane",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Park Path",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "The Rink",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Hill Giant",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Sprint Track",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Rabbit Holes",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Space Truckin'",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Brick Wall",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Z Factor",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Fireworks",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Pumpkin Patch",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Maze",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "North Pole",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "3 Times Around",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Lobby",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Skull Peak",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Express Shipping",
+        "difficulty": "Beginner"
+      },
+      {
+        "name": "Snake River",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Bloon Circles",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Archipelago",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Dockside",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Slalom",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Jungle",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Country Road",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Ice Flow",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Lava Fields",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Water Hazard",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Pyramids",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "MOAB Desert",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Snowflake",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "River Rapids",
+        "difficulty": "Intermediate"
+      },
+      {
+        "name": "Battle Knot",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Mount Magma",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Switch",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Lightning Scar",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Downstream",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "The Eye",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "The Great Divide",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Scorched Earth",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Rink Revenge",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Dune Sea",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Crypt Keeper",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Candyland",
+        "difficulty": "Advanced"
+      },
+      {
+        "name": "Clock",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Castle",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Spooky Castle",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Death Valley",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Drag Strip",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Tunnels",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Tree Tops",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Runway",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Down The Drain",
+        "difficulty": "Expert"
+      },
+      {
+        "name": "Bloontonium Lab",
+        "difficulty": "Extreme"
+      },
+      {
+        "name": "Main Street",
+        "difficulty": "Extreme"
+      },
+      {
+        "name": "Tar Pits",
+        "difficulty": "Extreme"
+      },
+      {
+        "name": "Alpine Lake",
+        "difficulty": null
+      },
+      {
+        "name": "Campfire",
+        "difficulty": null
+      },
+      {
+        "name": "Cash Money",
+        "difficulty": null
+      },
+      {
+        "name": "Dance Floor",
+        "difficulty": null
+      },
+      {
+        "name": "Dark Forest",
+        "difficulty": null
+      },
+      {
+        "name": "Fast Track",
+        "difficulty": null
+      },
+      {
+        "name": "Forgotten Garden",
+        "difficulty": null
+      },
+      {
+        "name": "Haunted Swamp",
+        "difficulty": null
+      },
+      {
+        "name": "Lonely Heart",
+        "difficulty": null
+      },
+      {
+        "name": "Oasis",
+        "difficulty": null
+      },
+      {
+        "name": "Present Delivery",
+        "difficulty": null
+      },
+      {
+        "name": "Six Feet",
+        "difficulty": null
+      },
+      {
+        "name": "Snowman",
+        "difficulty": null
+      },
+      {
+        "name": "Spider Map",
+        "difficulty": null
+      }
+    ]
+  },
+  "btd6": {
+    "difficulties": [
+      {
+        "name": "Easy",
+        "modes": [
+          "Standard",
+          "Primary Only",
+          "Deflation",
+          "Sandbox"
+        ]
+      },
+      {
+        "name": "Medium",
+        "modes": [
+          "Standard",
+          "Military Only",
+          "Reverse",
+          "Apopalypse",
+          "Sandbox"
+        ]
+      },
+      {
+        "name": "Hard",
+        "modes": [
+          "Standard",
+          "Magic Monkeys Only",
+          "Alternate Bloons Rounds",
+          "Double HP MOABs",
+          "Impoppable",
+          "Half Cash",
+          "C.H.I.M.P.S.",
+          "Sandbox"
+        ]
+      }
+    ],
+    "bloons": {
+      "normal": [
+        "Red Bloon",
+        "Blue Bloon",
+        "Green Bloon",
+        "Yellow Bloon",
+        "Pink Bloon",
+        "Black Bloon",
+        "White Bloon",
+        "Purple Bloon",
+        "Lead Bloon",
+        "Zebra Bloon",
+        "Rainbow Bloon",
+        "Ceramic Bloon"
+      ],
+      "moab_class": [
+        "M.O.A.B.",
+        "B.F.B.",
+        "Z.O.M.G.",
+        "D.D.T.",
+        "B.A.D."
+      ],
+      "properties": [
+        "Camo Bloon",
+        "Regrow Bloon",
+        "Camo Regrow Bloon",
+        "Fortified Bloon",
+        "Fortified Camo Bloon",
+        "Fortified Regrow Bloon",
+        "Fortified Camo Regrow Bloon"
+      ],
+      "other": [
+        "Test Bloon",
+        "MOAB Test Bloon",
+        "Golden Bloon"
+      ],
+      "boss_minions": [
+        "Bloonarius Minions",
+        "Lych-Soul",
+        "Zombie MOAB-class Bloon",
+        "Rock Bloon",
+        "Elite Rock Bloon",
+        "Diamond Bloon"
+      ]
+    },
+    "bosses": [
+      {
+        "name": "Bloonarius",
+        "title": "the Inflator"
+      },
+      {
+        "name": "Elite Bloonarius",
+        "title": "the Inflator"
+      },
+      {
+        "name": "Lych",
+        "title": "Gravelord"
+      },
+      {
+        "name": "Elite Lych",
+        "title": "Gravelord"
+      },
+      {
+        "name": "Vortex",
+        "title": "Deadly Master of Air"
+      },
+      {
+        "name": "Elite Vortex",
+        "title": "Deadly Master of Air"
+      },
+      {
+        "name": "Dreadbloon",
+        "title": "Armored Behemoth"
+      },
+      {
+        "name": "Elite Dreadbloon",
+        "title": "Armored Behemoth"
+      },
+      {
+        "name": "Elite Phayze",
+        "title": "Reality Warper"
+      },
+      {
+        "name": "Blastapopoulos",
+        "title": "Demon of the Core"
+      },
+      {
+        "name": "Elite Blastapopoulos",
+        "title": "Demon of the Core"
+      },
+      {
+        "name": "Diamondback",
+        "title": "The Village Devourer"
+      },
+      {
+        "name": "Elite Diamondback",
+        "title": "The Village Devourer"
+      }
+    ]
+  }
+}
