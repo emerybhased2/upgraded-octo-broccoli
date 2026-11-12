@@ -14,7 +14,8 @@ public final class Main {
         }
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Puffball Patrol");
-            GamePanel panel = new GamePanel();
+            Sound.init();
+            GamePanel panel = new GamePanel(Profile.load());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.add(panel);
             frame.pack();

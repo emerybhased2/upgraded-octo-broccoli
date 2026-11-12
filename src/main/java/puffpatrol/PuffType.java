@@ -84,6 +84,17 @@ enum PuffType {
         return this == NIMBUS || this == STORMHEAD;
     }
 
+    /** The next layer up that a regrowing puff can grow back into, or null. */
+    PuffType regrowParent() {
+        return switch (this) {
+            case ROSE -> SKY;
+            case SKY -> MOSS;
+            case MOSS -> BUTTER;
+            case BUTTER -> BLUSH;
+            default -> null;
+        };
+    }
+
     /** Puffs with several hit points per layer show cracks as they wear down. */
     boolean showsDamage() {
         return hp > 1;

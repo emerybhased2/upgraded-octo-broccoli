@@ -54,10 +54,11 @@ final class Particle {
         return p;
     }
 
-    static Particle streak(double x, double y, double x2, double y2) {
+    static Particle streak(double x, double y, double x2, double y2, Color c) {
         Particle p = new Particle(Kind.STREAK, x, y, 10);
         p.x2 = x2;
         p.y2 = y2;
+        p.color = c;
         return p;
     }
 
@@ -113,7 +114,7 @@ final class Particle {
             }
             case STREAK -> {
                 g.setStroke(new BasicStroke(4f * a + 0.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                g.setColor(new Color(255, 246, 200, (int) (230 * a)));
+                g.setColor(Art.alpha(color, (int) (230 * a)));
                 g.draw(new Line2D.Double(x, y, x2, y2));
                 g.setStroke(new BasicStroke(1.2f));
                 g.setColor(new Color(140, 100, 60, (int) (200 * a)));

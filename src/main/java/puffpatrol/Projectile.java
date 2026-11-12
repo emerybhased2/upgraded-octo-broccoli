@@ -5,7 +5,7 @@ import java.util.IdentityHashMap;
 import java.util.Set;
 
 final class Projectile {
-    enum Kind { QUILL, STINGER, ACORN, BOLT }
+    enum Kind { QUILL, STINGER, ACORN, BOLT, SLIME, BURR, PEBBLE, FEATHER, LASER, BARB }
 
     final Kind kind;
     final Tower owner;
@@ -13,33 +13,56 @@ final class Projectile {
     final double angle;
     int life;
     int pierce;
-    final int damage;
-    final DamageType dmgType;
+    int damage;
+    DamageType dmgType;
     final double hitR;
+    /** Burrs travel for this many ticks, then sit still on the path. */
+    int travel = -1;
     boolean dead;
     private final Set<Puff> hit = Collections.newSetFromMap(new IdentityHashMap<>());
 
-    Projectile(Kind kind, Tower t, double angle) {
+    Projectile(Kind kind, Tower t, double angle, double sx, double sy, double speed, double range) {
         this.kind = kind;
         this.owner = t;
         this.angle = angle;
-        this.x = t.x;
-        this.y = t.y - 8;
-        this.vx = Math.cos(angle) * t.projSpeed;
-        this.vy = Math.sin(angle) * t.projSpeed;
-        this.life = (int) ((Math.min(t.range, 900) * 1.25 + 30) / t.projSpeed);
-        this.pierce = Math.max(1, t.pierce);
-        this.damage = t.damage;
+        this.x = sx;
+        this.y = sy;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.life = (int) ((Math.min(range, 900) * 1.25 + 30) / Math.max(0.5, speed));
+        this.pierce = Math.max(1, t.effPierce());
+        this.damage = t.effDamage();
         this.dmgType = t.dmgType;
         this.hitR = switch (kind) {
-            case QUILL -> 5;
-            case STINGER -> 4;
-            case ACORN -> 7;
-            case BOLT -> 8;
+            case QUILL, PEBBLE, FEATHER -> 5;
+            case STINGER, BARB -> 4;
+            case ACORN, SLIME -> 7;
+            case BOLT, LASER -> 8;
+            case BURR -> 9;
         };
     }
 
+    /** A projectile fired from where the critter currently is, with its own range and speed. */
+    static Projectile shot(Kind kind, Tower t, double angle) {
+        return new Projectile(kind, t, angle, t.px, t.py - 8, t.projSpeed, t.effRange());
+    }
+
+    /** A burr thrown from (sx,sy) to land at (tx,ty) and wait there. */
+    static Projectile burr(Tower t, double sx, double sy, double tx, double ty) {
+        double d = Math.hypot(tx - sx, ty - sy);
+        Projectile p = new Projectile(Kind.BURR, t, Math.atan2(ty - sy, tx - sx), sx, sy, t.projSpeed, 0);
+        p.travel = Math.max(1, (int) (d / t.projSpeed));
+        p.life = p.travel + t.burrLife;
+        return p;
+    }
+
     void update(World w) {
+        if (kind == Kind.BURR) {
+            if (travel > 0 && --travel == 0) {
+                vx = 0;
+                vy = 0;
+            }
+        }
         x += vx;
         y += vy;
         if (--life <= 0 || x < -30 || y < -30 || x > GameMap.W + 30 || y > GameMap.H + 30) {
@@ -56,8 +79,16 @@ final class Projectile {
                 return;
             }
             hit.add(p);
-            w.damage(p, damage, dmgType, owner);
+            if (kind == Kind.SLIME) {
+                w.slime(p, owner);
+            } else {
+                w.damage(p, damage, dmgType, owner);
+                if (owner.hitSplash > 0) {
+                    w.blast(p.x, p.y, owner.hitSplash, damage, Math.max(4, owner.maxHits), owner, DamageType.EXPLOSIVE, true);
+                }
+            }
             if (--pierce <= 0) {
+                if (kind == Kind.BURR && owner.burrBombs) w.blast(x, y, 40, 2, 12, owner, DamageType.EXPLOSIVE, true);
                 dead = true;
                 return;
             }

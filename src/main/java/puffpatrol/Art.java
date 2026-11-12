@@ -150,6 +150,13 @@ final class Art {
             case MOTH -> moth(g);
             case TOAD -> toad(g);
             case MUSHROOM -> mushrooms(g);
+            case SNAIL -> snail(g);
+            case THISTLE -> thistle(g);
+            case LANTERN -> lantern(g);
+            case DRAGONFLY -> dragonfly(g);
+            case OTTER -> otter(g);
+            case STORK -> stork(g);
+            case MOLE -> mole(g);
         }
     }
 
@@ -449,6 +456,274 @@ final class Art {
         g.fill(circ(cx - capW * 0.36, base - h - capW * 0.06, capW * 0.05));
     }
 
+
+    private static void snail(Graphics2D g) {
+        Color body = new Color(0x9DB08A);
+        g.setColor(new Color(150, 210, 120, 110));
+        g.fill(ell(4, 52, 44, 7));
+        Path2D.Double slug = new Path2D.Double();
+        slug.moveTo(6, 54);
+        slug.quadTo(30, 58, 50, 52);
+        slug.quadTo(58, 46, 56, 34);
+        slug.quadTo(54, 26, 48, 28);
+        slug.quadTo(46, 40, 34, 46);
+        slug.quadTo(18, 50, 6, 54);
+        slug.closePath();
+        ink(g, slug, vgrad(26, mix(body, Color.WHITE, 0.25), 58, mix(body, INK, 0.2)));
+        line(g, INK, 1.4f, 49, 29, 46, 14);
+        line(g, INK, 1.4f, 54, 30, 56, 15);
+        ink(g, circ(46, 13, 3.4), body, 1.2f);
+        ink(g, circ(56, 14, 3.4), body, 1.2f);
+        g.setColor(INK);
+        g.fill(circ(46.6, 13, 1.5));
+        g.fill(circ(56.6, 14, 1.5));
+        g.setStroke(new BasicStroke(1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(new Arc2D.Double(49, 36, 7, 5, 200, 140, Arc2D.OPEN));
+        cheek(g, 50, 42, 2.4);
+        ink(g, circ(26, 34, 17), radial(20, 26, 22, new Color(0xF2C38A), new Color(0xB7652E)));
+        Path2D.Double spiral = new Path2D.Double();
+        for (int i = 0; i <= 60; i++) {
+            double a = i * 0.21, r = 15 - i * 0.23;
+            double px = 26 + Math.cos(a) * r, py = 34 + Math.sin(a) * r;
+            if (i == 0) spiral.moveTo(px, py);
+            else spiral.lineTo(px, py);
+        }
+        g.setColor(new Color(0x7A3E18));
+        g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(spiral);
+        g.setColor(new Color(255, 255, 255, 120));
+        g.fill(ell(15, 22, 8, 5));
+    }
+
+    private static void thistle(Graphics2D g) {
+        Color leaf = new Color(0x5E9447);
+        for (int side = -1; side <= 1; side += 2) {
+            Path2D.Double l = new Path2D.Double();
+            l.moveTo(32, 56);
+            for (int i = 0; i <= 4; i++) {
+                double t = i / 4.0;
+                l.lineTo(32 + side * (8 + 18 * t), 54 - 14 * t - (i % 2) * 5);
+            }
+            l.lineTo(32 + side * 6, 46);
+            l.closePath();
+            ink(g, l, vgrad(36, mix(leaf, Color.WHITE, 0.2), 56, leaf), 1.2f);
+        }
+        double[][] heads = {{20, 26, 0.85}, {44, 22, 0.9}, {32, 14, 1.05}};
+        for (double[] h : heads) line(g, new Color(0x4C7A3A), 2.2f, 32, 54, h[0], h[1] + 10);
+        for (double[] h : heads) {
+            double cx = h[0], cy = h[1], sc = h[2];
+            Path2D.Double bulb = new Path2D.Double();
+            bulb.moveTo(cx - 7 * sc, cy + 2 * sc);
+            for (int i = 0; i <= 6; i++) {
+                double a = Math.PI * (i / 6.0);
+                bulb.lineTo(cx - Math.cos(a) * 7 * sc, cy + 2 * sc + Math.sin(a) * 9 * sc + (i % 2) * 1.5);
+            }
+            bulb.closePath();
+            ink(g, bulb, new Color(0x7FAE55), 1.2f);
+            Path2D.Double tuft = new Path2D.Double();
+            tuft.moveTo(cx - 7 * sc, cy + 2 * sc);
+            for (int i = 0; i <= 8; i++) {
+                double a = Math.PI + Math.PI * i / 8.0;
+                double r = (i % 2 == 0 ? 10 : 7) * sc;
+                tuft.lineTo(cx + Math.cos(a) * r, cy + 2 * sc + Math.sin(a) * r);
+            }
+            tuft.closePath();
+            ink(g, tuft, vgrad(cy - 8 * sc, new Color(0xD99CF0), cy + 2 * sc, new Color(0x9A4FC0)), 1.2f);
+        }
+        burr(g, 12, 50, 3.4);
+        burr(g, 52, 50, 3.4);
+        eye(g, 29.5, 18, 2.2, 2.8);
+        eye(g, 34.5, 18, 2.2, 2.8);
+    }
+
+    static void burr(Graphics2D g, double cx, double cy, double r) {
+        ink(g, star(cx, cy, r * 1.7, r, 10, 0), new Color(0x8C7A3A), 1f);
+        g.setColor(new Color(0xB8A55C));
+        g.fill(circ(cx - r * 0.25, cy - r * 0.25, r * 0.45));
+    }
+
+    private static void lantern(Graphics2D g) {
+        ink(g, new Rectangle2D.Double(30, 22, 4, 36), vgrad(22, new Color(0x9A6B3E), 58, new Color(0x6B4A2A)), 1.2f);
+        ink(g, ell(20, 54, 24, 7), new Color(0x6B4A2A), 1.2f);
+        Path2D.Double arm = new Path2D.Double();
+        arm.moveTo(32, 24);
+        arm.quadTo(44, 10, 52, 16);
+        g.setColor(INK);
+        g.setStroke(new BasicStroke(2.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(arm);
+        g.setPaint(radial(48, 30, 22, new Color(255, 220, 120, 150), new Color(255, 200, 80, 0)));
+        g.fill(circ(48, 30, 22));
+        line(g, INK, 1.2f, 52, 16, 52, 20);
+        ink(g, ell(41, 20, 14, 4), new Color(0x3A3A44), 1f);
+        Shape body = new RoundRectangle2D.Double(40, 22, 16, 18, 10, 12);
+        ink(g, body, radial(46, 28, 14, new Color(0xFFF4C2), new Color(0xF2A23A)));
+        g.setColor(new Color(0xD08A2A));
+        g.setStroke(new BasicStroke(0.9f));
+        for (int i = 0; i < 3; i++) g.draw(new Line2D.Double(43 + i * 5, 23, 43 + i * 5, 39));
+        ink(g, ell(42, 39, 12, 4), new Color(0x3A3A44), 1f);
+        double[][] flies = {{20, 16}, {12, 30}, {24, 40}, {58, 46}, {14, 8}};
+        for (double[] f : flies) {
+            g.setPaint(radial(f[0], f[1], 5, new Color(255, 245, 140, 220), new Color(255, 245, 140, 0)));
+            g.fill(circ(f[0], f[1], 5));
+            g.setColor(new Color(0xFFF07A));
+            g.fill(circ(f[0], f[1], 1.6));
+        }
+        eye(g, 45.5, 31, 1.8, 2.4);
+        eye(g, 50.5, 31, 1.8, 2.4);
+        g.setColor(INK);
+        g.setStroke(new BasicStroke(0.9f));
+        g.draw(new Arc2D.Double(46, 32.5, 4, 3, 200, 140, Arc2D.OPEN));
+    }
+
+    private static void dragonfly(Graphics2D g) {
+        Color wing = new Color(210, 240, 255, 150);
+        double[][] wings = {{22, 18, -0.5}, {34, 16, -0.2}, {22, 40, 0.5}, {34, 42, 0.2}};
+        for (double[] w : wings) {
+            AffineTransform old = g.getTransform();
+            g.rotate(w[2], w[0] + 9, w[1] + 4);
+            ink(g, ell(w[0] - 4, w[1], 24, 9), wing, 1f);
+            g.setColor(new Color(150, 200, 230, 160));
+            g.setStroke(new BasicStroke(0.6f));
+            g.draw(new Line2D.Double(w[0] - 2, w[1] + 4.5, w[0] + 18, w[1] + 4.5));
+            g.setTransform(old);
+        }
+        for (int i = 0; i < 6; i++) {
+            ink(g, ell(2 + i * 5.5, 29, 7, 6), vgrad(29, new Color(0x5ED3C4), 35, new Color(0x1F8A86)), 1f);
+        }
+        ink(g, ell(34, 25, 14, 14), vgrad(25, new Color(0x6FE0D0), 39, new Color(0x2A9C93)));
+        ink(g, circ(50, 30, 8), new Color(0x4CC2B4));
+        ink(g, circ(53, 26, 5), new Color(0xB43A6E), 1.2f);
+        ink(g, circ(53, 34, 5), new Color(0xB43A6E), 1.2f);
+        g.setColor(new Color(255, 255, 255, 200));
+        g.fill(circ(51.8, 24.8, 1.4));
+        g.fill(circ(51.8, 32.8, 1.4));
+        line(g, INK, 1.2f, 56, 30, 59, 30);
+    }
+
+    private static void otter(Graphics2D g) {
+        Color fur = new Color(0x8A5A34);
+        ink(g, ell(16, 26, 28, 30), vgrad(26, mix(fur, Color.WHITE, 0.15), 56, mix(fur, INK, 0.2)));
+        ink(g, ell(21, 32, 18, 20), new Color(0xE8CFA6));
+        ink(g, circ(30, 20, 12), vgrad(8, mix(fur, Color.WHITE, 0.15), 32, fur));
+        ink(g, circ(20, 11, 3.5), fur, 1.2f);
+        ink(g, circ(40, 11, 3.5), fur, 1.2f);
+        ink(g, ell(23, 20, 14, 10), new Color(0xE8CFA6));
+        g.setColor(INK);
+        g.fill(ell(28, 20, 5, 3.6));
+        eye(g, 25.5, 16.5, 3, 3.6);
+        eye(g, 34.5, 16.5, 3, 3.6);
+        g.setStroke(new BasicStroke(0.8f));
+        for (int i = -1; i <= 1; i++) {
+            g.draw(new Line2D.Double(26, 24 + i * 1.5, 18, 23 + i * 3));
+            g.draw(new Line2D.Double(34, 24 + i * 1.5, 42, 23 + i * 3));
+        }
+        cheek(g, 23, 25, 2.3);
+        cheek(g, 37, 25, 2.3);
+        ink(g, ell(36, 34, 9, 7), fur, 1.2f);
+        ink(g, ell(41, 30, 10, 8), radial(43, 32, 7, new Color(0xD8D4CC), new Color(0x8C877E)), 1.2f);
+        Shape water = new Arc2D.Double(4, 40, 56, 22, 0, -180, Arc2D.CHORD);
+        g.setPaint(vgrad(44, new Color(110, 180, 220, 210), 62, new Color(60, 120, 180, 230)));
+        g.fill(new Rectangle2D.Double(4, 44, 56, 14));
+        g.setColor(new Color(255, 255, 255, 200));
+        g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        Path2D.Double wave = new Path2D.Double();
+        wave.moveTo(4, 45);
+        for (int x = 4; x <= 60; x += 7) wave.quadTo(x + 3.5, 42, x + 7, 45);
+        g.draw(wave);
+        g.setColor(INK);
+        g.setStroke(new BasicStroke(1.2f));
+        g.draw(new Arc2D.Double(4, 34, 56, 24, 200, 140, Arc2D.OPEN));
+    }
+
+    private static void stork(Graphics2D g) {
+        Path2D.Double wingL = new Path2D.Double();
+        wingL.moveTo(26, 30);
+        wingL.quadTo(10, 10, 2, 16);
+        wingL.quadTo(10, 26, 22, 36);
+        wingL.closePath();
+        ink(g, wingL, vgrad(12, Color.WHITE, 36, new Color(0xD8DDE6)));
+        Path2D.Double tipL = new Path2D.Double();
+        tipL.moveTo(2, 16);
+        tipL.quadTo(6, 13, 10, 14);
+        tipL.lineTo(12, 22);
+        tipL.closePath();
+        ink(g, tipL, new Color(0x2C2C30), 1f);
+        Path2D.Double wingR = new Path2D.Double();
+        wingR.moveTo(30, 30);
+        wingR.quadTo(30, 6, 42, 2);
+        wingR.quadTo(40, 20, 36, 34);
+        wingR.closePath();
+        ink(g, wingR, vgrad(2, Color.WHITE, 34, new Color(0xD8DDE6)));
+        ink(g, ell(16, 28, 30, 14), vgrad(28, Color.WHITE, 42, new Color(0xD8DDE6)));
+        Path2D.Double tail = new Path2D.Double();
+        tail.moveTo(17, 33);
+        tail.lineTo(8, 30);
+        tail.lineTo(9, 38);
+        tail.closePath();
+        ink(g, tail, new Color(0x2C2C30), 1f);
+        ink(g, ell(40, 24, 9, 12), Color.WHITE);
+        ink(g, circ(47, 22, 6), Color.WHITE);
+        Path2D.Double beak = new Path2D.Double();
+        beak.moveTo(52, 20);
+        beak.lineTo(63, 25);
+        beak.lineTo(52, 25);
+        beak.closePath();
+        ink(g, beak, new Color(0xE8603A), 1.1f);
+        eye(g, 48.5, 20.5, 2.2, 2.6);
+        line(g, new Color(0xE8603A), 1.6f, 26, 41, 22, 50);
+        line(g, new Color(0xE8603A), 1.6f, 31, 41, 29, 50);
+        g.setColor(new Color(0xE8603A));
+        g.fill(ell(25, 41, 2.5, 1.5));
+    }
+
+    static BufferedImage nest() {
+        return cached("nest", () -> {
+            BufferedImage img = newImage(48, 28);
+            Graphics2D g = gfx(img);
+            ink(g, ell(4, 6, 40, 18), vgrad(6, new Color(0xB08A5A), 24, new Color(0x6B4A2A)));
+            g.setColor(new Color(0x5A3C22));
+            g.setStroke(new BasicStroke(1f));
+            Random r = new Random(5);
+            for (int i = 0; i < 14; i++) {
+                double x = 6 + r.nextDouble() * 34;
+                g.draw(new Line2D.Double(x, 9 + r.nextDouble() * 4, x + 6 - r.nextDouble() * 12, 18 + r.nextDouble() * 4));
+            }
+            ink(g, ell(16, 6, 7, 6), new Color(0xF4F0E4), 1f);
+            ink(g, ell(23, 5, 7, 6), new Color(0xEAF2F8), 1f);
+            g.dispose();
+            return img;
+        });
+    }
+
+    private static void mole(Graphics2D g) {
+        ink(g, new Arc2D.Double(4, 38, 56, 34, 0, 180, Arc2D.CHORD), vgrad(38, new Color(0xA8865A), 56, new Color(0x7A5A36)));
+        g.setColor(new Color(0x6B4A2A));
+        Random r = new Random(9);
+        for (int i = 0; i < 12; i++) g.fill(circ(10 + r.nextDouble() * 44, 46 + r.nextDouble() * 8, 1 + r.nextDouble()));
+        Color fur = new Color(0x4A4552);
+        ink(g, ell(16, 18, 32, 34), vgrad(18, mix(fur, Color.WHITE, 0.2), 52, fur));
+        Path2D.Double helmet = new Path2D.Double();
+        helmet.moveTo(15, 28);
+        helmet.quadTo(32, 6, 49, 28);
+        helmet.closePath();
+        ink(g, helmet, vgrad(12, new Color(0xF7D25A), 28, new Color(0xD9A21E)));
+        ink(g, ell(13, 26, 38, 5), new Color(0xD9A21E), 1.2f);
+        ink(g, circ(32, 17, 4), new Color(0xFFF6C8), 1.2f);
+        g.setPaint(radial(32, 17, 9, new Color(255, 245, 190, 160), new Color(255, 245, 190, 0)));
+        g.fill(circ(32, 17, 9));
+        g.setColor(INK);
+        g.fill(circ(26, 33, 1.5));
+        g.fill(circ(38, 33, 1.5));
+        ink(g, star(32, 39, 4.6, 2.4, 8, 0), new Color(0xF29AA8), 1f);
+        cheek(g, 23, 39, 2.6);
+        cheek(g, 41, 39, 2.6);
+        for (int side = -1; side <= 1; side += 2) {
+            double cx = 32 + side * 17;
+            ink(g, ell(cx - 6, 44, 12, 9), new Color(0xF2B8B8), 1.2f);
+            for (int k = -1; k <= 1; k++) line(g, INK, 0.8f, cx + k * 3, 44, cx + k * 3.5, 41.5);
+        }
+    }
+
     static void drawCoin(Graphics2D g, double cx, double cy, double r) {
         ink(g, circ(cx, cy, r), radial(cx - r * 0.3, cy - r * 0.3, r * 1.4, new Color(0xFFF1A8), new Color(0xD9A21E)), 1.2f);
         g.setColor(new Color(0xB07D10));
@@ -664,6 +939,48 @@ final class Art {
         });
     }
 
+    /** A metal band with rivets, laid over an armoured puff. */
+    static BufferedImage armour(PuffType t) {
+        return cached("armour:" + t, () -> {
+            int s = puffImageSize(t, 1);
+            BufferedImage img = newImage(s, s);
+            Graphics2D g = gfx(img);
+            double c = s / 2.0, r = t.radius;
+            Shape body = cloud(c, c, r);
+            Shape old = g.getClip();
+            g.clip(body);
+            Rectangle2D band = new Rectangle2D.Double(c - r * 1.6, c - r * 0.75, r * 3.2, r * 0.38);
+            g.setPaint(vgrad(band.getY(), new Color(0xE6EAF0), band.getMaxY(), new Color(0x7C8694)));
+            g.fill(band);
+            g.setColor(INK);
+            g.setStroke(new BasicStroke(1f));
+            g.draw(band);
+            g.setColor(new Color(0x4E5764));
+            for (int i = -2; i <= 2; i++) g.fill(circ(c + i * r * 0.45, band.getCenterY(), Math.max(1, r * 0.06)));
+            g.setClip(old);
+            g.setColor(new Color(0x5E6774));
+            g.setStroke(new BasicStroke((float) Math.max(1.6, r / 7)));
+            g.draw(body);
+            g.dispose();
+            return img;
+        });
+    }
+
+    /** A tiny green sprout worn by regrowing puffs. */
+    static void drawSprout(Graphics2D g, double x, double y) {
+        line(g, new Color(0x3E7A2A), 1.6f, x, y, x, y - 7);
+        Path2D.Double l1 = new Path2D.Double();
+        l1.moveTo(x, y - 5);
+        l1.quadTo(x - 7, y - 10, x - 6, y - 4);
+        l1.closePath();
+        ink(g, l1, new Color(0x7BC45A), 1f);
+        Path2D.Double l2 = new Path2D.Double();
+        l2.moveTo(x, y - 7);
+        l2.quadTo(x + 7, y - 13, x + 7, y - 6);
+        l2.closePath();
+        ink(g, l2, new Color(0x7BC45A), 1f);
+    }
+
     // ------------------------------------------------------------------ projectiles
 
     static BufferedImage projectile(Projectile.Kind k, boolean fire) {
@@ -706,6 +1023,49 @@ final class Art {
                 }
             }
             case ACORN -> acorn(g, 10, 11, 0.9);
+            case SLIME -> {
+                g.setColor(new Color(130, 200, 90, 90));
+                g.fill(circ(9, 10, 8));
+                Path2D.Double blob = new Path2D.Double();
+                blob.moveTo(4, 10);
+                blob.quadTo(5, 4, 11, 5);
+                blob.quadTo(17, 6, 16, 11);
+                blob.quadTo(15, 16, 9, 15);
+                blob.quadTo(3, 15, 4, 10);
+                ink(g, blob, radial(8, 8, 9, new Color(0xD4F5A0), new Color(0x6FB547)), 1f);
+                g.setColor(new Color(255, 255, 255, 200));
+                g.fill(circ(8, 8, 1.6));
+            }
+            case BURR -> burr(g, 10, 10, 4.2);
+            case PEBBLE -> {
+                ink(g, ell(5, 7, 11, 8), radial(8, 9, 8, new Color(0xD8D4CC), new Color(0x7C776E)), 1f);
+                g.setColor(new Color(255, 255, 255, 150));
+                g.fill(ell(7, 8, 3, 2));
+            }
+            case FEATHER -> {
+                Path2D.Double f = new Path2D.Double();
+                f.moveTo(2, 10);
+                f.quadTo(9, 5, 18, 9);
+                f.quadTo(9, 15, 2, 10);
+                ink(g, f, new Color(0xF8F8FF), 0.9f);
+                line(g, new Color(0x9AA4B1), 0.8f, 2, 10, 18, 9.5);
+            }
+            case LASER -> {
+                g.setPaint(new GradientPaint(0, 10, new Color(255, 255, 200, 0), 20, 10, new Color(255, 250, 180, 255)));
+                g.fill(new RoundRectangle2D.Double(0, 7, 20, 6, 6, 6));
+                g.setColor(Color.WHITE);
+                g.fill(new RoundRectangle2D.Double(6, 9, 14, 2, 2, 2));
+            }
+            case BARB -> {
+                Path2D.Double b = new Path2D.Double();
+                b.moveTo(5, 8.5);
+                b.lineTo(13, 8.5);
+                b.lineTo(17, 10);
+                b.lineTo(13, 11.5);
+                b.lineTo(5, 11.5);
+                b.closePath();
+                ink(g, b, new Color(0x4CC2B4), 0.8f);
+            }
             case BOLT -> {
                 g.setPaint(radial(10, 10, 10, new Color(220, 170, 255, 220), new Color(150, 80, 255, 0)));
                 g.fill(circ(10, 10, 10));
@@ -725,10 +1085,16 @@ final class Art {
         BufferedImage img = newImage(W, H);
         Graphics2D g = gfx(img);
         Random rnd = new Random(m.seed);
-        boolean isle = m.style == GameMap.Style.ISLE;
+        GameMap.Style st = m.style;
+        boolean isle = st == GameMap.Style.ISLE;
 
-        Color grassA = isle ? new Color(0x9CC66A) : new Color(0x8EC063);
-        Color grassB = isle ? new Color(0x6FA34B) : new Color(0x5E9A45);
+        Color grassA, grassB;
+        switch (st) {
+            case ISLE -> { grassA = new Color(0x9CC66A); grassB = new Color(0x6FA34B); }
+            case FOREST -> { grassA = new Color(0x6E9A52); grassB = new Color(0x3F6B34); }
+            case CLIFF -> { grassA = new Color(0xA8B48A); grassB = new Color(0x7F8C6A); }
+            default -> { grassA = new Color(0x8EC063); grassB = new Color(0x5E9A45); }
+        }
         g.setPaint(vgrad(0, grassA, H, grassB));
         g.fillRect(0, 0, W, H);
         for (int i = 0; i < 45; i++) {
@@ -744,72 +1110,92 @@ final class Art {
             g.setColor(alpha(mix(mix(grassA, Color.WHITE, 0.25), mix(grassB, INK, 0.3), t), 140));
             g.draw(new Line2D.Double(x, y, x + rnd.nextDouble() * 2 - 1, y - 2 - rnd.nextDouble() * 3));
         }
+        if (st == GameMap.Style.CLIFF) {
+            for (int i = 0; i < 70; i++) {
+                double x = rnd.nextDouble() * W, y = rnd.nextDouble() * H;
+                g.setColor(new Color(120, 115, 100, 70));
+                g.fill(ell(x, y, 10 + rnd.nextDouble() * 30, 5 + rnd.nextDouble() * 12));
+            }
+        }
 
         if (isle) {
             Path2D.Double shore = new Path2D.Double();
             shore.moveTo(W, 0);
-            shore.lineTo(705, 0);
-            for (int y = 0; y <= H; y += 20) shore.lineTo(700 + Math.sin(y * 0.05) * 8 + rnd.nextDouble() * 4, y);
+            shore.lineTo(700, 0);
+            for (int y = 0; y <= H; y += 20) shore.lineTo(695 + Math.sin(y * 0.05) * 8 + rnd.nextDouble() * 4, y);
             shore.lineTo(W, H);
             shore.closePath();
             g.setPaint(new GradientPaint(690, 0, new Color(0xE8D9A6), 760, 0, new Color(0xF4E7BE)));
             g.fill(shore);
             g.setColor(alpha(new Color(0xB89F62), 120));
-            for (int i = 0; i < 500; i++) {
-                double x = 710 + rnd.nextDouble() * 40, y = rnd.nextDouble() * H;
-                g.fill(circ(x, y, 0.8));
+            for (int i = 0; i < 500; i++) g.fill(circ(700 + rnd.nextDouble() * 40, rnd.nextDouble() * H, 0.8));
+        }
+        for (Shape c : m.chasms) drawChasm(g, c, rnd);
+        for (Shape w : m.water) drawWater(g, w, rnd, isle && w.getBounds2D().getHeight() >= H - 1);
+
+        // paths
+        float pw = (float) m.pathWidth;
+        Color dirt = switch (st) {
+            case ISLE -> new Color(0xD9BE88);
+            case FOREST -> new Color(0xB08A5E);
+            case CLIFF -> new Color(0xC9B99A);
+            default -> new Color(0xCBA26E);
+        };
+        for (GameMap.Track tr : m.tracks) {
+            Path2D.Double path = tr.shape();
+            g.setStroke(new BasicStroke(pw + 12, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            g.setColor(new Color(40, 60, 20, 60));
+            g.draw(path);
+            g.setStroke(new BasicStroke(pw + 6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            g.setColor(mix(dirt, INK, 0.45));
+            g.draw(path);
+        }
+        for (GameMap.Track tr : m.tracks) {
+            Path2D.Double path = tr.shape();
+            g.setStroke(new BasicStroke(pw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            g.setColor(dirt);
+            g.draw(path);
+            g.setStroke(new BasicStroke(pw * 0.45f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            g.setColor(new Color(255, 240, 200, 45));
+            g.draw(path);
+            for (double d = 0; d < tr.length; d += 3.5) {
+                Point2D.Double p = tr.pointAt(d);
+                double ox = (rnd.nextDouble() - 0.5) * pw * 0.9, oy = (rnd.nextDouble() - 0.5) * pw * 0.9;
+                double r = 0.6 + rnd.nextDouble() * 1.6;
+                g.setColor(rnd.nextInt(3) == 0 ? mix(dirt, INK, 0.3) : mix(dirt, Color.WHITE, 0.3));
+                g.fill(circ(p.x + ox, p.y + oy, r));
             }
         }
-        for (java.awt.Shape w : m.water) drawWater(g, w, rnd, isle);
 
-        // path
-        Path2D.Double path = m.pathShape();
-        float pw = (float) m.pathWidth;
-        g.setStroke(new BasicStroke(pw + 12, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-        g.setColor(new Color(40, 60, 20, 60));
-        g.draw(path);
-        g.setStroke(new BasicStroke(pw + 6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-        g.setColor(new Color(0x7A5A36));
-        g.draw(path);
-        g.setStroke(new BasicStroke(pw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-        g.setColor(isle ? new Color(0xD9BE88) : new Color(0xCBA26E));
-        g.draw(path);
-        g.setStroke(new BasicStroke(pw * 0.45f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-        g.setColor(new Color(255, 240, 200, 45));
-        g.draw(path);
-        for (double d = 0; d < m.length; d += 3.5) {
-            Point2D.Double p = m.pointAt(d);
-            double ox = (rnd.nextDouble() - 0.5) * pw * 0.9, oy = (rnd.nextDouble() - 0.5) * pw * 0.9;
-            double r = 0.6 + rnd.nextDouble() * 1.6;
-            g.setColor(rnd.nextInt(3) == 0 ? new Color(0x8C6A45) : new Color(0xE6CDA0));
-            g.fill(circ(p.x + ox, p.y + oy, r));
-        }
-
-        // flowers and little stones
+        // flowers, toadstools, stones
         Color[] petals = {new Color(0xFFFFFF), new Color(0xFFE066), new Color(0xF7A8C8), new Color(0xB9A7F2), new Color(0xFF8F6B)};
-        for (int i = 0; i < 220; i++) {
+        int flowers = st == GameMap.Style.CLIFF ? 60 : 220;
+        for (int i = 0; i < flowers; i++) {
             double x = rnd.nextDouble() * W, y = rnd.nextDouble() * H;
-            if (m.distToPath(x, y) < m.pathWidth / 2 + 8 || inWater(m, x, y) || (isle && x > 695)) continue;
-            flower(g, x, y, petals[rnd.nextInt(petals.length)], 1.6 + rnd.nextDouble() * 1.2);
+            if (!decorSpot(m, x, y) || (isle && x > 690)) continue;
+            if (st == GameMap.Style.FOREST && rnd.nextInt(3) == 0) toadstool(g, x, y, rnd);
+            else flower(g, x, y, petals[rnd.nextInt(petals.length)], 1.6 + rnd.nextDouble() * 1.2);
         }
         for (double[] r : m.rocks) rock(g, r[0], r[1], r[2], rnd);
-        for (double[] t : m.trees) tree(g, t[0], t[1], t[2], rnd, isle);
+        for (double[] t : m.trees) tree(g, t[0], t[1], t[2], rnd, st);
         if (m.lighthouse != null) lighthouse(g, m.lighthouse[0], m.lighthouse[1]);
+        if (m.windmill != null) windmill(g, m.windmill[0], m.windmill[1]);
 
-        // soft vignette to frame the page
         g.setPaint(new RadialGradientPaint(new Point2D.Double(W / 2.0, H / 2.0), (float) (W * 0.75),
-                new float[]{0.6f, 1f}, new Color[]{new Color(0, 0, 0, 0), new Color(40, 30, 10, 70)}));
+                new float[]{0.6f, 1f}, new Color[]{new Color(0, 0, 0, 0), new Color(40, 30, 10, st == GameMap.Style.FOREST ? 110 : 70)}));
         g.fillRect(0, 0, W, H);
         g.dispose();
         return img;
     }
 
-    private static boolean inWater(GameMap m, double x, double y) {
-        for (java.awt.Shape s : m.water) if (s.contains(x, y)) return true;
-        return false;
+    private static boolean decorSpot(GameMap m, double x, double y) {
+        if (m.distToPath(x, y) < m.pathWidth / 2 + 8) return false;
+        for (Shape s : m.water) if (s.contains(x, y)) return false;
+        for (Shape s : m.chasms) if (s.getBounds2D().contains(x, y)) return false;
+        return true;
     }
 
-    private static void drawWater(Graphics2D g, java.awt.Shape w, Random rnd, boolean sea) {
+    private static void drawWater(Graphics2D g, Shape w, Random rnd, boolean sea) {
         Rectangle2D b = w.getBounds2D();
         if (sea) {
             g.setPaint(new GradientPaint((float) b.getX(), 0, new Color(0x7CC4D8), (float) b.getMaxX(), 0, new Color(0x3F86B8)));
@@ -829,26 +1215,103 @@ final class Art {
             return;
         }
         g.setColor(new Color(0x6E8F4A));
-        g.fill(new Ellipse2D.Double(b.getX() - 5, b.getY() - 4, b.getWidth() + 10, b.getHeight() + 8));
+        g.setStroke(new BasicStroke(9f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(w);
         g.setPaint(radial(b.getCenterX() - b.getWidth() * 0.15, b.getCenterY() - b.getHeight() * 0.2,
-                b.getWidth() * 0.7, new Color(0x9ED6E8), new Color(0x4F92B8)));
+                Math.max(b.getWidth(), b.getHeight()) * 0.7, new Color(0x9ED6E8), new Color(0x4F92B8)));
         g.fill(w);
         ink(g, w, null, 1.6f);
+        Shape oldClip = g.getClip();
+        g.clip(w);
         g.setColor(new Color(255, 255, 255, 140));
         g.setStroke(new BasicStroke(1.3f));
-        for (int i = 0; i < 4; i++) {
-            double x = b.getX() + 15 + rnd.nextDouble() * (b.getWidth() - 40), y = b.getY() + 15 + rnd.nextDouble() * (b.getHeight() - 30);
+        int ripples = (int) Math.max(3, b.getWidth() * b.getHeight() / 5000);
+        for (int i = 0; i < ripples; i++) {
+            double x = b.getX() + rnd.nextDouble() * b.getWidth(), y = b.getY() + rnd.nextDouble() * b.getHeight();
             g.draw(new Arc2D.Double(x, y, 16, 6, 10, 160, Arc2D.OPEN));
         }
-        for (int i = 0; i < 3; i++) {
-            double x = b.getX() + 20 + rnd.nextDouble() * (b.getWidth() - 40), y = b.getY() + 18 + rnd.nextDouble() * (b.getHeight() - 36);
+        g.setClip(oldClip);
+        int pads = (int) Math.min(6, Math.max(1, b.getWidth() * b.getHeight() / 9000));
+        for (int i = 0; i < pads * 3 && pads > 0; i++) {
+            double x = b.getX() + 15 + rnd.nextDouble() * (b.getWidth() - 30), y = b.getY() + 12 + rnd.nextDouble() * (b.getHeight() - 24);
+            if (!w.contains(x - 8, y) || !w.contains(x + 8, y)) continue;
             Shape pad = new Arc2D.Double(x - 7, y - 5, 14, 10, 30, 300, Arc2D.PIE);
             ink(g, pad, new Color(0x5FA046), 1f);
-            if (i == 0) {
+            if (i % 3 == 0) {
                 g.setColor(new Color(0xF7B8D0));
                 g.fill(star(x, y, 3.5, 1.8, 6, 0));
             }
+            if (--pads <= 0) break;
         }
+    }
+
+    private static void drawChasm(Graphics2D g, Shape c, Random rnd) {
+        Rectangle2D b = c.getBounds2D();
+        g.setColor(new Color(0x9A927E));
+        g.setStroke(new BasicStroke(8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(c);
+        g.setPaint(radial(b.getCenterX(), b.getCenterY(), Math.max(b.getWidth(), b.getHeight()) * 0.55,
+                new Color(0x120E0B), new Color(0x4A4038)));
+        g.fill(c);
+        Shape old = g.getClip();
+        g.clip(c);
+        g.setColor(new Color(0x6E6355));
+        for (int i = 0; i < 9; i++) {
+            double x = b.getX() + rnd.nextDouble() * b.getWidth(), y = b.getY() + rnd.nextDouble() * b.getHeight() * 0.4;
+            g.fill(ell(x, y, 8 + rnd.nextDouble() * 14, 4 + rnd.nextDouble() * 6));
+        }
+        g.setPaint(vgrad(b.getY(), new Color(0, 0, 0, 0), b.getMaxY(), new Color(0, 0, 0, 120)));
+        g.fill(b);
+        g.setClip(old);
+        ink(g, c, null, 1.6f);
+        g.setColor(new Color(0xC9C0A8));
+        g.setStroke(new BasicStroke(1.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        for (int i = 0; i < 5; i++) {
+            double a = rnd.nextDouble() * Math.PI;
+            double x = b.getCenterX() + Math.cos(a + Math.PI) * b.getWidth() * 0.42, y = b.getCenterY() - Math.sin(a) * b.getHeight() * 0.44;
+            g.fill(ell(x - 4, y - 3, 8, 5));
+        }
+    }
+
+    private static void toadstool(Graphics2D g, double x, double y, Random rnd) {
+        double s = 0.8 + rnd.nextDouble() * 0.6;
+        ink(g, new RoundRectangle2D.Double(x - 1.6 * s, y - 4 * s, 3.2 * s, 5 * s, 2, 2), new Color(0xF3E6C8), 0.8f);
+        Color cap = rnd.nextBoolean() ? new Color(0xD7443E) : new Color(0xC9873A);
+        ink(g, new Arc2D.Double(x - 5 * s, y - 8 * s, 10 * s, 8 * s, 0, 180, Arc2D.CHORD), cap, 0.8f);
+        g.setColor(new Color(0xFFF8EC));
+        g.fill(circ(x - 1.5 * s, y - 6 * s, 0.9 * s));
+        g.fill(circ(x + 2 * s, y - 5.5 * s, 0.7 * s));
+    }
+
+    private static void windmill(Graphics2D g, double x, double y) {
+        g.setColor(new Color(0, 0, 0, 60));
+        g.fill(ell(x - 28, y + 30, 60, 16));
+        Path2D.Double body = new Path2D.Double();
+        body.moveTo(x - 20, y + 38);
+        body.lineTo(x - 13, y - 18);
+        body.lineTo(x + 13, y - 18);
+        body.lineTo(x + 20, y + 38);
+        body.closePath();
+        ink(g, body, vgrad(y - 18, new Color(0xF2E6CC), y + 38, new Color(0xCDB98A)));
+        Path2D.Double roof = new Path2D.Double();
+        roof.moveTo(x - 17, y - 16);
+        roof.quadTo(x, y - 40, x + 17, y - 16);
+        roof.closePath();
+        ink(g, roof, new Color(0xA8463E));
+        ink(g, new RoundRectangle2D.Double(x - 6, y + 20, 12, 18, 8, 8), new Color(0x6B4A2A));
+        ink(g, circ(x, y + 2, 4), new Color(0x9ED6E8), 1.2f);
+        for (int i = 0; i < 4; i++) {
+            double a = i * Math.PI / 2 + 0.4;
+            AffineTransform old = g.getTransform();
+            g.rotate(a, x, y - 20);
+            Shape blade = new Rectangle2D.Double(x + 4, y - 25, 34, 10);
+            ink(g, blade, new Color(0xEDE2C6), 1.2f);
+            g.setColor(new Color(0x8C6A45));
+            g.setStroke(new BasicStroke(0.8f));
+            for (int k = 1; k < 5; k++) g.draw(new Line2D.Double(x + 4 + k * 7, y - 25, x + 4 + k * 7, y - 15));
+            g.setTransform(old);
+        }
+        ink(g, circ(x, y - 20, 4), new Color(0x6B4A2A), 1.2f);
     }
 
     private static void flower(Graphics2D g, double x, double y, Color c, double r) {
@@ -877,7 +1340,8 @@ final class Art {
         g.fill(ell(x - r * 0.6, y - r * 0.75, r * 0.7, r * 0.35));
     }
 
-    private static void tree(Graphics2D g, double x, double y, double r, Random rnd, boolean isle) {
+    private static void tree(Graphics2D g, double x, double y, double r, Random rnd, GameMap.Style st) {
+        boolean isle = st == GameMap.Style.ISLE;
         g.setColor(new Color(20, 40, 10, 70));
         g.fill(ell(x - r * 0.9, y + r * 0.2, r * 2.2, r * 1.1));
         Area canopy = new Area(circ(x, y, r * 0.75));
@@ -885,7 +1349,7 @@ final class Art {
             double a = i * Math.PI * 2 / 6 + rnd.nextDouble() * 0.3;
             canopy.add(new Area(circ(x + Math.cos(a) * r * 0.5, y + Math.sin(a) * r * 0.45, r * 0.5)));
         }
-        Color leaf = isle ? new Color(0x4E8E46) : new Color(0x3F7F3C);
+        Color leaf = isle ? new Color(0x4E8E46) : st == GameMap.Style.FOREST ? new Color(0x2F6A3A) : st == GameMap.Style.CLIFF ? new Color(0x56784A) : new Color(0x3F7F3C);
         ink(g, canopy, radial(x - r * 0.35, y - r * 0.4, r * 1.4, mix(leaf, new Color(0xD8F0A0), 0.45), mix(leaf, INK, 0.25)), 1.6f);
         g.setColor(new Color(255, 255, 220, 70));
         g.fill(circ(x - r * 0.3, y - r * 0.35, r * 0.3));

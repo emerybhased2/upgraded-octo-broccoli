@@ -37,7 +37,7 @@ public final class ArtExporter {
     }
 
     static BufferedImage sheet() {
-        int w = 1100, h = 680;
+        int w = 1100, h = 870;
         BufferedImage img = Art.newImage(w, h);
         Graphics2D g = Art.gfx(img);
         g.setPaint(Art.vgrad(0, new Color(0xF7EFD9), h, new Color(0xE9DCBC)));
@@ -50,7 +50,7 @@ public final class ArtExporter {
         g.drawString("The meadow folk", 30, 92);
         TowerType[] ts = TowerType.values();
         for (int i = 0; i < ts.length; i++) {
-            int x = 30 + i * 150, y = 104;
+            int x = 30 + (i % 7) * 150, y = 104 + (i / 7) * 184;
             card(g, x, y, 136, 170);
             g.drawImage(Art.towerImage(ts[i], 2), x + 4, y + 4, null);
             g.setFont(label);
@@ -59,12 +59,12 @@ public final class ArtExporter {
             g.drawString(ts[i].label, x + 68 - sw / 2, y + 156);
         }
         g.setFont(new Font(Font.SERIF, Font.ITALIC, 20));
-        g.drawString("The visiting puffs", 30, 312);
+        g.drawString("The visiting puffs", 30, 496);
         PuffType[] ps = PuffType.values();
         int x = 30;
         for (int i = 0; i < ps.length; i++) {
             BufferedImage p = Art.puffImage(ps[i], 0, i < 11 ? 1.6 : 1.0);
-            int y = i < 11 ? 330 : 470;
+            int y = i < 11 ? 514 : 654;
             if (i == 11) x = 30;
             int cw = Math.max(86, p.getWidth() + 10);
             card(g, x, y, cw, i < 11 ? 120 : 190);
@@ -77,12 +77,13 @@ public final class ArtExporter {
         }
         int px = 600;
         g.setFont(new Font(Font.SERIF, Font.ITALIC, 20));
-        g.drawString("Things that get thrown", px, 490);
+        g.drawString("Things that get thrown", px, 674);
         Projectile.Kind[] ks = Projectile.Kind.values();
         for (int i = 0; i < ks.length + 1; i++) {
-            BufferedImage p = i < ks.length ? Art.projectileImage(ks[i], false, 3) : Art.projectileImage(Projectile.Kind.STINGER, true, 3);
-            card(g, px + i * 92, 504, 80, 80);
-            g.drawImage(p, px + i * 92 + 10, 514, null);
+            BufferedImage p = i < ks.length ? Art.projectileImage(ks[i], false, 2.4) : Art.projectileImage(Projectile.Kind.STINGER, true, 2.4);
+            int cx = px + (i % 6) * 80, cy = 688 + (i / 6) * 80;
+            card(g, cx, cy, 70, 70);
+            g.drawImage(p, cx + 35 - p.getWidth() / 2, cy + 35 - p.getHeight() / 2, null);
         }
         g.dispose();
         return img;
